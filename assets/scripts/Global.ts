@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import { GameStartOption } from "./Constant";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -19,4 +21,7 @@ export default class Global{
         this._instance = new Global();
         return this._instance;
     }
+
+    public round: number = 0;
+    public gameStartOption: GameStartOption = GameStartOption.NewRun;
 }

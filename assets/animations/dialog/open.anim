@@ -23,7 +23,7 @@
   },
   "events": [
     {
-      "frame": 0,
+      "frame": 0.05,
       "func": "showEvent",
       "params": []
     }

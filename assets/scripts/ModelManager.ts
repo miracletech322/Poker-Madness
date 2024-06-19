@@ -21,7 +21,7 @@ export default class ModelManager extends cc.Component {
     // onLoad () {}
 
     start () {
-
+        
     }
 
     // update (dt) {}

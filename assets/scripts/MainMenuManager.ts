@@ -5,44 +5,35 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import { GameStartOption } from "./Constant";
+import Global from "./Global";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
-import PLayerSettingDialog from "./ui/PlaySettingDialog";
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class MainMenuManager extends cc.Component {
-    @property(cc.Prefab)
-    playerSettingDialog: cc.Prefab;
+  @property(cc.Prefab)
+  startOptionDialog: cc.Prefab;
 
-    // LIFE-CYCLE CALLBACKS:
+  // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
+  // onLoad () {}
 
-    start () {
+  start() {}
 
-    }
+  protected onEnable(): void {
+    clientEvent.on("showPlayerSettingDialog", this.playButtonClicked, this);
+  }
 
-    protected onEnable(): void {
-        clientEvent.on("showPlayerSettingDialog", this.showPlayerSettingDialog, this);
-    }
+  protected onDisable(): void {
+    clientEvent.off("hidePlayerSettingDialog", this.playButtonClicked, this);
+  }
 
-    protected onDisable(): void {
-        clientEvent.off("showPlayerSettingDialog", this.showPlayerSettingDialog, this);
-    
-    }
+  // update (dt) {}
 
-    // update (dt) {}
-
-    public playButtonClicked()
-    {
-        uiManager.instance.showDialog("PlaySettingDialog", this.playerSettingDialog);
-    }
-
-    public showPlayerSettingDialog()
-    {
-        console.log("showPlayerSettingDialog");
-        uiManager.instance.showDialog("PlaySettingDialog", this.playerSettingDialog);
-    }
+  public playButtonClicked() {
+    uiManager.instance.showDialog("StartOptionDialog", this.startOptionDialog);
+  }
 }
