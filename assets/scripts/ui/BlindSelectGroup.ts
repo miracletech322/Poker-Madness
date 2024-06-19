@@ -1,3 +1,5 @@
+import GameManager from "../GameManager";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -24,6 +26,7 @@ export default class BlindSelectGroup extends cc.Component {
   }
 
   public selectRound() {
-    this.hideEvent()
+    this.animation.play("close");
+    GameManager._instance.gameSetting.gameStart = true;
   }
 }

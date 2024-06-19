@@ -5,8 +5,9 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { GameSetting } from "./Constant";
+import { GameSetting, maxCardForOneRow } from "./Constant";
 import GameManager from "./GameManager";
+import ModelManager from "./ModelManager";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
 
@@ -49,6 +50,12 @@ export default class UIManager extends cc.Component {
   @property(cc.Label)
   roundValue: cc.Label;
 
+  @property(cc.Label)
+  totalCardsCount: cc.Label;
+
+  @property(cc.Label)
+  remainCardsCount: cc.Label;
+
   // LIFE-CYCLE CALLBACKS:
 
   protected onLoad(): void {
@@ -64,11 +71,11 @@ export default class UIManager extends cc.Component {
 
   protected onEnable(): void {}
 
-  showStartOptionDialog() {
+  public showStartOptionDialog() {
     uiManager.instance.showDialog("StartOption", this.startOptionDialog);
   }
 
-  changeGameValues(gameSetting: GameSetting) {
+  public changeGameValues(gameSetting: GameSetting) {
     gameSetting.score &&
       (this.scoreValue.string = gameSetting.score.toString());
     gameSetting.multi1 &&
@@ -83,6 +90,15 @@ export default class UIManager extends cc.Component {
     gameSetting.ante && (this.anteValue.string = gameSetting.ante.toString());
     gameSetting.totalAnte &&
       (this.anteTotal.string = gameSetting.totalAnte.toString());
+    gameSetting.totalCardCount &&
+      (this.totalCardsCount.string = gameSetting.totalCardCount.toString());
+    gameSetting.remainCardCount &&
+      (this.remainCardsCount.string = gameSetting.remainCardCount.toString());
+  }
+
+  public clickCardGroup() {
+    const { newCards, handCards } =
+      ModelManager._instance.getHandCardsIfLowNumber();
   }
 
   // update (dt) {}

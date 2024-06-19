@@ -7,6 +7,7 @@
 // }
 
 export interface GameSetting {
+  gameStart?: boolean;
   totalCardCount?: number;
   remainCardCount?: number;
   score?: number;
@@ -17,6 +18,24 @@ export interface GameSetting {
   cash?: number;
   ante?: number;
   totalAnte?: number;
+  remainHandCardsCount?: number;
+  newCards?: Card[];
+  handCards?: Card[];
+}
+
+export interface Card {
+  id: number;
+  symbol: string;
+  value: number;
+  cardFlower: CardFlower;
+  flowerId: number;
+}
+
+export enum CardFlower {
+  Spade,
+  Heart,
+  Cube,
+  Diamond,
 }
 
 export enum GameStartOption {
@@ -26,3 +45,4 @@ export enum GameStartOption {
 }
 
 export const max_round: number = 5;
+export const maxCardForOneRow = 8;

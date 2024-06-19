@@ -5,7 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { GameSetting } from "./Constant";
+import { Card, GameSetting } from "./Constant";
+import ModelManager from "./ModelManager";
 import UIManager from "./UIManager";
 import { clientEvent } from "./framework/clientEvent";
 
@@ -23,9 +24,7 @@ export default class GameManager extends cc.Component {
     console.log("GameManager loaded");
   }
 
-  start() {
-    this.roundInit();
-  }
+  start() {}
 
   // update (dt) {}
 
@@ -33,8 +32,9 @@ export default class GameManager extends cc.Component {
 
   protected onDisable(): void {}
 
-  roundInit() {
+  public roundInit() {
     this.gameSetting = {
+      gameStart: false,
       totalCardCount: 52,
       remainCardCount: 52,
       score: 1,
@@ -45,7 +45,11 @@ export default class GameManager extends cc.Component {
       cash: 5,
       ante: 1,
       totalAnte: 8,
+      remainHandCardsCount: 0,
+      newCards: [],
+      handCards: [],
     };
+    ModelManager._instance.randomSortCards();
 
     // clientEvent.on("changeInitialValues", this.)
   }
