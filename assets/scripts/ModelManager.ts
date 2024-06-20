@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { Card, CardFlower, maxCardForOneRow } from "./Constant";
+import { CardObject, CardFlower, maxCardForOneRow } from "./Constant";
 import GameManager from "./GameManager";
 
 const { ccclass, property } = cc._decorator;
@@ -27,7 +27,7 @@ export default class ModelManager extends cc.Component {
 
   // update (dt) {}
 
-  public initialCards(): Card[] {
+  public initialCards(): CardObject[] {
     return [
       {
         id: 0,
@@ -35,6 +35,7 @@ export default class ModelManager extends cc.Component {
         value: 11,
         cardFlower: CardFlower.Spade,
         flowerId: 0,
+        background: "cards-spade-01",
       },
       {
         id: 1,
@@ -42,6 +43,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 1,
+        background: "cards-spade-K",
       },
       {
         id: 2,
@@ -49,6 +51,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 2,
+        background: "cards-spade-Q",
       },
       {
         id: 3,
@@ -56,6 +59,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 3,
+        background: "cards-spade-J",
       },
       {
         id: 4,
@@ -63,6 +67,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 4,
+        background: "cards-spade-10",
       },
       {
         id: 5,
@@ -70,6 +75,7 @@ export default class ModelManager extends cc.Component {
         value: 9,
         cardFlower: CardFlower.Spade,
         flowerId: 5,
+        background: "cards-spade-09",
       },
       {
         id: 6,
@@ -77,6 +83,7 @@ export default class ModelManager extends cc.Component {
         value: 8,
         cardFlower: CardFlower.Spade,
         flowerId: 6,
+        background: "cards-spade-08",
       },
       {
         id: 7,
@@ -84,6 +91,7 @@ export default class ModelManager extends cc.Component {
         value: 7,
         cardFlower: CardFlower.Spade,
         flowerId: 7,
+        background: "cards-spade-07",
       },
       {
         id: 8,
@@ -91,6 +99,7 @@ export default class ModelManager extends cc.Component {
         value: 6,
         cardFlower: CardFlower.Spade,
         flowerId: 8,
+        background: "cards-spade-06",
       },
       {
         id: 9,
@@ -98,6 +107,7 @@ export default class ModelManager extends cc.Component {
         value: 5,
         cardFlower: CardFlower.Spade,
         flowerId: 9,
+        background: "cards-spade-05",
       },
       {
         id: 10,
@@ -105,6 +115,7 @@ export default class ModelManager extends cc.Component {
         value: 4,
         cardFlower: CardFlower.Spade,
         flowerId: 10,
+        background: "cards-spade-04",
       },
       {
         id: 11,
@@ -112,6 +123,7 @@ export default class ModelManager extends cc.Component {
         value: 3,
         cardFlower: CardFlower.Spade,
         flowerId: 11,
+        background: "cards-spade-03",
       },
       {
         id: 12,
@@ -119,6 +131,7 @@ export default class ModelManager extends cc.Component {
         value: 2,
         cardFlower: CardFlower.Spade,
         flowerId: 12,
+        background: "cards-spade-02",
       },
       {
         id: 13,
@@ -126,6 +139,7 @@ export default class ModelManager extends cc.Component {
         value: 11,
         cardFlower: CardFlower.Heart,
         flowerId: 0,
+        background: "cards-heart-01",
       },
       {
         id: 14,
@@ -133,6 +147,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 1,
+        background: "cards-heart-K",
       },
       {
         id: 15,
@@ -140,6 +155,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 2,
+        background: "cards-heart-Q",
       },
       {
         id: 16,
@@ -147,6 +163,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 3,
+        background: "cards-heart-J",
       },
       {
         id: 17,
@@ -154,6 +171,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 4,
+        background: "cards-heart-10",
       },
       {
         id: 18,
@@ -161,6 +179,7 @@ export default class ModelManager extends cc.Component {
         value: 9,
         cardFlower: CardFlower.Heart,
         flowerId: 5,
+        background: "cards-heart-09",
       },
       {
         id: 19,
@@ -168,6 +187,7 @@ export default class ModelManager extends cc.Component {
         value: 8,
         cardFlower: CardFlower.Heart,
         flowerId: 6,
+        background: "cards-heart-08",
       },
       {
         id: 20,
@@ -175,6 +195,7 @@ export default class ModelManager extends cc.Component {
         value: 7,
         cardFlower: CardFlower.Heart,
         flowerId: 7,
+        background: "cards-heart-07",
       },
       {
         id: 21,
@@ -182,6 +203,7 @@ export default class ModelManager extends cc.Component {
         value: 6,
         cardFlower: CardFlower.Heart,
         flowerId: 8,
+        background: "cards-heart-06",
       },
       {
         id: 22,
@@ -189,6 +211,7 @@ export default class ModelManager extends cc.Component {
         value: 5,
         cardFlower: CardFlower.Heart,
         flowerId: 9,
+        background: "cards-heart-05",
       },
       {
         id: 23,
@@ -196,6 +219,7 @@ export default class ModelManager extends cc.Component {
         value: 4,
         cardFlower: CardFlower.Heart,
         flowerId: 10,
+        background: "cards-heart-04",
       },
       {
         id: 24,
@@ -203,6 +227,7 @@ export default class ModelManager extends cc.Component {
         value: 3,
         cardFlower: CardFlower.Heart,
         flowerId: 11,
+        background: "cards-heart-03",
       },
       {
         id: 25,
@@ -210,6 +235,7 @@ export default class ModelManager extends cc.Component {
         value: 2,
         cardFlower: CardFlower.Heart,
         flowerId: 12,
+        background: "cards-heart-02",
       },
       {
         id: 26,
@@ -217,6 +243,7 @@ export default class ModelManager extends cc.Component {
         value: 11,
         cardFlower: CardFlower.Cube,
         flowerId: 0,
+        background: "cards-club-01",
       },
       {
         id: 27,
@@ -224,6 +251,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 1,
+        background: "cards-club-K",
       },
       {
         id: 28,
@@ -231,6 +259,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 2,
+        background: "cards-club-Q",
       },
       {
         id: 29,
@@ -238,6 +267,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 3,
+        background: "cards-club-J",
       },
       {
         id: 30,
@@ -245,6 +275,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 4,
+        background: "cards-club-10",
       },
       {
         id: 31,
@@ -252,6 +283,7 @@ export default class ModelManager extends cc.Component {
         value: 9,
         cardFlower: CardFlower.Cube,
         flowerId: 5,
+        background: "cards-club-09",
       },
       {
         id: 32,
@@ -259,6 +291,7 @@ export default class ModelManager extends cc.Component {
         value: 8,
         cardFlower: CardFlower.Cube,
         flowerId: 6,
+        background: "cards-club-08",
       },
       {
         id: 33,
@@ -266,6 +299,7 @@ export default class ModelManager extends cc.Component {
         value: 7,
         cardFlower: CardFlower.Cube,
         flowerId: 7,
+        background: "cards-club-07",
       },
       {
         id: 34,
@@ -273,6 +307,7 @@ export default class ModelManager extends cc.Component {
         value: 6,
         cardFlower: CardFlower.Cube,
         flowerId: 8,
+        background: "cards-club-06",
       },
       {
         id: 35,
@@ -280,6 +315,7 @@ export default class ModelManager extends cc.Component {
         value: 5,
         cardFlower: CardFlower.Cube,
         flowerId: 9,
+        background: "cards-club-05",
       },
       {
         id: 36,
@@ -287,6 +323,7 @@ export default class ModelManager extends cc.Component {
         value: 4,
         cardFlower: CardFlower.Cube,
         flowerId: 10,
+        background: "cards-club-04",
       },
       {
         id: 37,
@@ -294,6 +331,7 @@ export default class ModelManager extends cc.Component {
         value: 3,
         cardFlower: CardFlower.Cube,
         flowerId: 11,
+        background: "cards-club-03",
       },
       {
         id: 38,
@@ -301,6 +339,7 @@ export default class ModelManager extends cc.Component {
         value: 2,
         cardFlower: CardFlower.Cube,
         flowerId: 12,
+        background: "cards-club-02",
       },
       {
         id: 39,
@@ -308,6 +347,7 @@ export default class ModelManager extends cc.Component {
         value: 11,
         cardFlower: CardFlower.Diamond,
         flowerId: 0,
+        background: "cards-diamond-01",
       },
       {
         id: 40,
@@ -315,6 +355,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 1,
+        background: "cards-diamond-K",
       },
       {
         id: 41,
@@ -322,6 +363,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 2,
+        background: "cards-diamond-Q",
       },
       {
         id: 42,
@@ -329,6 +371,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 3,
+        background: "cards-diamond-J",
       },
       {
         id: 43,
@@ -336,6 +379,7 @@ export default class ModelManager extends cc.Component {
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 4,
+        background: "cards-diamond-10",
       },
       {
         id: 44,
@@ -343,6 +387,7 @@ export default class ModelManager extends cc.Component {
         value: 9,
         cardFlower: CardFlower.Diamond,
         flowerId: 5,
+        background: "cards-diamond-09",
       },
       {
         id: 45,
@@ -350,6 +395,7 @@ export default class ModelManager extends cc.Component {
         value: 8,
         cardFlower: CardFlower.Diamond,
         flowerId: 6,
+        background: "cards-diamond-08",
       },
       {
         id: 46,
@@ -357,6 +403,7 @@ export default class ModelManager extends cc.Component {
         value: 7,
         cardFlower: CardFlower.Diamond,
         flowerId: 7,
+        background: "cards-diamond-07",
       },
       {
         id: 47,
@@ -364,6 +411,7 @@ export default class ModelManager extends cc.Component {
         value: 6,
         cardFlower: CardFlower.Diamond,
         flowerId: 8,
+        background: "cards-diamond-06",
       },
       {
         id: 48,
@@ -371,6 +419,7 @@ export default class ModelManager extends cc.Component {
         value: 5,
         cardFlower: CardFlower.Diamond,
         flowerId: 9,
+        background: "cards-diamond-05",
       },
       {
         id: 49,
@@ -378,6 +427,7 @@ export default class ModelManager extends cc.Component {
         value: 4,
         cardFlower: CardFlower.Diamond,
         flowerId: 10,
+        background: "cards-diamond-04",
       },
       {
         id: 50,
@@ -385,6 +435,7 @@ export default class ModelManager extends cc.Component {
         value: 3,
         cardFlower: CardFlower.Diamond,
         flowerId: 11,
+        background: "cards-diamond-03",
       },
       {
         id: 51,
@@ -392,6 +443,7 @@ export default class ModelManager extends cc.Component {
         value: 2,
         cardFlower: CardFlower.Diamond,
         flowerId: 12,
+        background: "cards-diamond-02",
       },
     ];
   }
@@ -423,20 +475,5 @@ export default class ModelManager extends cc.Component {
       return -1;
     }
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  public getHandCardsIfLowNumber() {
-    const newCards = GameManager._instance.gameSetting.newCards;
-    const handCards = GameManager._instance.gameSetting.handCards;
-    const handCardsCount =
-      GameManager._instance.gameSetting.remainHandCardsCount;
-    if (maxCardForOneRow > handCardsCount) {
-      while (true) {
-        if (handCards.length === maxCardForOneRow || newCards.length === 0)
-          break;
-        handCards.push(newCards.shift());
-      }
-    }
-    return { newCards, handCards };
   }
 }

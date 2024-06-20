@@ -1,4 +1,5 @@
 import GameManager from "../GameManager";
+import { clientEvent } from "../framework/clientEvent";
 
 const { ccclass, property } = cc._decorator;
 
@@ -27,6 +28,6 @@ export default class BlindSelectGroup extends cc.Component {
 
   public selectRound() {
     this.animation.play("close");
-    GameManager._instance.gameSetting.gameStart = true;
+    clientEvent.dispatchEvent("roundStarted", true);
   }
 }

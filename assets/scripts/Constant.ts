@@ -19,16 +19,18 @@ export interface GameSetting {
   ante?: number;
   totalAnte?: number;
   remainHandCardsCount?: number;
-  newCards?: Card[];
-  handCards?: Card[];
+  newCards?: CardObject[];
+  handCards?: CardObject[];
 }
 
-export interface Card {
+export interface CardObject {
   id: number;
   symbol: string;
   value: number;
   cardFlower: CardFlower;
   flowerId: number;
+  background: string;
+  pickStatus?: boolean;
 }
 
 export enum CardFlower {

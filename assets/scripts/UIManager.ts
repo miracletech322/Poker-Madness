@@ -5,11 +5,12 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { GameSetting, maxCardForOneRow } from "./Constant";
+import { CardObject, GameSetting, maxCardForOneRow } from "./Constant";
 import GameManager from "./GameManager";
 import ModelManager from "./ModelManager";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
+import Card from "./ui/Card";
 
 const { ccclass, property } = cc._decorator;
 
@@ -56,6 +57,18 @@ export default class UIManager extends cc.Component {
   @property(cc.Label)
   remainCardsCount: cc.Label;
 
+  @property(cc.Prefab)
+  card: cc.Prefab;
+
+  @property(cc.Node)
+  cardsGroup: cc.Node;
+
+  @property(cc.Node)
+  backCard: cc.Node;
+
+  @property(cc.Node)
+  previewCardsGroup: cc.Node;
+
   // LIFE-CYCLE CALLBACKS:
 
   protected onLoad(): void {
@@ -96,10 +109,87 @@ export default class UIManager extends cc.Component {
       (this.remainCardsCount.string = gameSetting.remainCardCount.toString());
   }
 
-  public clickCardGroup() {
-    const { newCards, handCards } =
-      ModelManager._instance.getHandCardsIfLowNumber();
+  public fillCards(newFilledCards: CardObject[]) {
+    for (let i = 0; i < newFilledCards.length; i++) {
+      const card = newFilledCards[i];
+      if (card) {
+        const newCard = cc.instantiate(this.card);
+        newCard.getComponent(Card).setCardInfo(card);
+
+        const backCardWorldPos = this.backCard.convertToWorldSpaceAR(
+          cc.v2(0, 0)
+        );
+        const initialPos =
+          this.cardsGroup.convertToNodeSpaceAR(backCardWorldPos);
+        newCard.setPosition(initialPos);
+        this.cardsGroup.addChild(newCard);
+
+        const targetLocalPos = cc.v2(
+          i * (this.cardsGroup.width / 8) + newCard.width / 2,
+          0
+        );
+        const targetWorldPos =
+          this.cardsGroup.convertToWorldSpaceAR(targetLocalPos);
+
+        cc.tween(newCard)
+          .delay(i * 0.1)
+          .to(0.3, {
+            position: cc.v3(
+              this.cardsGroup.convertToNodeSpaceAR(targetWorldPos).x,
+              this.cardsGroup.convertToNodeSpaceAR(targetWorldPos).y,
+              0
+            ),
+          })
+          .call(() => {
+            clientEvent.dispatchEvent("fillCardEvent", card.id);
+          })
+          .start();
+      }
+    }
+  }
+
+  loadImageAtlas() {
+    return new Promise((resolve, reject) => {
+      cc.loader.loadRes(
+        "/images/TexturePacker/Sprites",
+        cc.SpriteAtlas,
+        function (err, imageAtlas) {
+          if (err) {
+            console.log("error: loading card atlas", err);
+            reject(err);
+            return;
+          }
+          console.log("Loaded end atlas successfully");
+          GameManager._instance.imageAtlas = imageAtlas;
+          resolve();
+        }
+      );
+    });
   }
 
   // update (dt) {}
+
+  HandButtonClick() {
+    const handCards = GameManager._instance.gameSetting.handCards;
+    if (handCards.length === 0) return;
+
+    const cards: cc.Node[] = this.cardsGroup.children;
+
+    let pickedCount = 0;
+    handCards.forEach((card, index) => {
+      if (card.pickStatus) {
+        pickedCount++;
+        cc.tween(cards[index])
+          .delay(pickedCount * 0.1)
+          .to(0.2, {
+            position: cc.v3(0, 20, 0),
+          })
+          .start();
+      }
+    });
+
+    GameManager._instance.discardHandCards();
+  }
+
+  DiscardButtonClick() {}
 }
