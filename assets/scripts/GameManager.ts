@@ -94,7 +94,6 @@ export default class GameManager extends cc.Component {
         handCards.push(newCard);
       }
     }
-    console.log({ newFilledCards });
     UIManager.instance.fillCards(newFilledCards);
   }
 
@@ -212,8 +211,15 @@ export default class GameManager extends cc.Component {
     console.log({ popCards, scoreCards, scoreType });
     return { scoreCards, scoreType };
   }
-  
-  removePopedCards() {
 
+  removePopedCards() {
+    const handCards = this.gameSetting.handCards;
+    const updatedHandCards: CardObject[] = [];
+    handCards.forEach((card) => {
+      if (card.cardStatus !== CardStatus.Pop) {
+        updatedHandCards.push(card);
+      }
+    });
+    this.updateGameSetting({ handCards: updatedHandCards });
   }
 }

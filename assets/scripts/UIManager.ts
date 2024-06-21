@@ -397,7 +397,7 @@ export default class UIManager extends cc.Component {
       })
       .call(() => {
         GameManager._instance.removePopedCards();
-        // GameManager._instance.fillCards();
+        GameManager._instance.fillCards();
       })
       .start();
   }
