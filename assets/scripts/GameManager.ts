@@ -5,7 +5,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { CardObject, GameSetting, maxCardForOneRow } from "./Constant";
+import {
+  CardObject,
+  CardStatus,
+  GameSetting,
+  ScoreTypes,
+  maxCardForOneRow,
+} from "./Constant";
 import ModelManager from "./ModelManager";
 import UIManager from "./UIManager";
 import { clientEvent } from "./framework/clientEvent";
@@ -58,6 +64,7 @@ export default class GameManager extends cc.Component {
       remainHandCardsCount: 0,
       newCards: [],
       handCards: [],
+      scoreLevel: [0, 0, 0, 0, 0, 0, 0, 0, 0],
     };
     ModelManager._instance.randomSortCards();
   }
@@ -87,15 +94,16 @@ export default class GameManager extends cc.Component {
         handCards.push(newCard);
       }
     }
+    console.log({ newFilledCards });
     UIManager.instance.fillCards(newFilledCards);
   }
 
-  pickCardEvent([pickStatus, cardId]: [boolean, number]) {
+  pickCardEvent([pickStatus, cardId]: [CardStatus, number]) {
     const cardIndex = this.gameSetting.handCards.findIndex(
       (card) => card.id === cardId
     );
     if (cardIndex !== -1) {
-      this.gameSetting.handCards[cardIndex].pickStatus = pickStatus;
+      this.gameSetting.handCards[cardIndex].cardStatus = pickStatus;
     }
   }
 
@@ -105,7 +113,107 @@ export default class GameManager extends cc.Component {
     });
   }
 
-  discardHandCards() {
-    this.updateGameSetting({ handCards: [] });
+  discardHandCards(cardId: number) {
+    this.gameSetting.handCards = this.gameSetting.handCards.map((card) => {
+      if (card.id === cardId) {
+        return { ...card, cardStatus: CardStatus.Pop };
+      }
+      return card;
+    });
+  }
+
+  getSocreCardIdInPopedCards() {
+    const popCards = this.gameSetting.handCards.filter(
+      (card) => card.cardStatus === CardStatus.Pop
+    );
+    const popCardsSoryByWeight = popCards.sort(
+      (a, b) => a.flowerId - b.flowerId
+    );
+
+    let scoreCards: number[] = [];
+    let scoreType: ScoreTypes;
+    let rowCount = 1;
+    let pairCount = [1, 1];
+    let pairFlowerId = [-1, -1];
+    let pairCountIndex = 0;
+    let beforeVal = -2;
+    const firstCardSuit = popCards[0].cardFlower;
+    let sameSuit = true;
+
+    popCardsSoryByWeight.forEach((card) => {
+      if (card.flowerId - beforeVal === 1) {
+        rowCount++;
+      } else {
+        rowCount = 1;
+      }
+
+      if (card.flowerId === beforeVal) {
+        pairCount[pairCountIndex]++;
+      } else {
+        if (pairCount[pairCountIndex] >= 2) {
+          pairCountIndex++;
+        }
+      }
+
+      if (pairCount[pairCountIndex] >= 2) {
+        pairFlowerId[pairCountIndex] = card.flowerId;
+      }
+
+      if (firstCardSuit !== card.cardFlower) {
+        sameSuit = false;
+      }
+      beforeVal = card.flowerId;
+    });
+
+    if (rowCount === 5 && sameSuit) {
+      scoreType = ScoreTypes.StraightFlush;
+      popCards.forEach((card) => scoreCards.push(card.id));
+    } else if (rowCount === 5 && !sameSuit) {
+      scoreType = ScoreTypes.Straight;
+      popCards.forEach((card) => scoreCards.push(card.id));
+    } else if (pairCount[0] === 4) {
+      scoreType = ScoreTypes.FourOfAKind;
+    } else if (
+      (pairCount[0] === 3 && pairCount[1] === 2) ||
+      (pairCount[0] === 2 && pairCount[1] === 3)
+    ) {
+      scoreType = ScoreTypes.FullHouse;
+    } else if (sameSuit && popCards.length === 5) {
+      scoreType = ScoreTypes.Flush;
+      popCards.forEach((card) => scoreCards.push(card.id));
+    } else if (pairCount[0] === 3) {
+      scoreType = ScoreTypes.ThreeOfAKind;
+    } else if (pairCount[0] === 2 && pairCount[1] === 2) {
+      scoreType = ScoreTypes.TwoPair;
+    } else if (pairCount[0] === 2) {
+      scoreType = ScoreTypes.Pair;
+    } else {
+      scoreType = ScoreTypes.HighCard;
+      scoreCards.push(popCardsSoryByWeight[0].id);
+    }
+
+    if (
+      scoreType === ScoreTypes.FourOfAKind ||
+      scoreType === ScoreTypes.FullHouse ||
+      scoreType === ScoreTypes.ThreeOfAKind ||
+      scoreType === ScoreTypes.TwoPair ||
+      scoreType === ScoreTypes.Pair
+    ) {
+      popCards
+        .filter(
+          (card) =>
+            card.flowerId === pairFlowerId[0] ||
+            card.flowerId === pairFlowerId[1]
+        )
+        .forEach((card) => {
+          scoreCards.push(card.id);
+        });
+    }
+    console.log({ popCards, scoreCards, scoreType });
+    return { scoreCards, scoreType };
+  }
+  
+  removePopedCards() {
+
   }
 }

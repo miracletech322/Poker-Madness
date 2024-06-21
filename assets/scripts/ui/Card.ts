@@ -1,4 +1,4 @@
-import { CardObject } from "../Constant";
+import { CardObject, CardStatus, cardPopDistance } from "../Constant";
 import GameManager from "../GameManager";
 import { clientEvent } from "../framework/clientEvent";
 
@@ -53,17 +53,22 @@ export default class Card extends cc.Component {
 
   onMouseDown() {
     if (!this.statusHover) return;
+
     const handCards = GameManager._instance.gameSetting.handCards;
     const countPicked = handCards.filter(
-      (card) => card.pickStatus === true
+      (card) => card.cardStatus === CardStatus.Pick
     ).length;
     const currentPos = this.node.getPosition();
     if (this.selected) {
-      this.node.setPosition(cc.v2(currentPos.x, currentPos.y - 30));
-      clientEvent.dispatchEvent("pickCard", [false, this.cardId]);
+      this.node.setPosition(
+        cc.v2(currentPos.x, currentPos.y - cardPopDistance)
+      );
+      clientEvent.dispatchEvent("pickCard", [CardStatus.Initial, this.cardId]);
     } else if (countPicked < 5 && !this.selected) {
-      this.node.setPosition(cc.v2(currentPos.x, currentPos.y + 30));
-      clientEvent.dispatchEvent("pickCard", [true, this.cardId]);
+      this.node.setPosition(
+        cc.v2(currentPos.x, currentPos.y + cardPopDistance)
+      );
+      clientEvent.dispatchEvent("pickCard", [CardStatus.Pick, this.cardId]);
     } else return;
     this.selected = !this.selected;
   }

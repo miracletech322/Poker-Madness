@@ -5,7 +5,12 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
-import { CardObject, CardFlower, maxCardForOneRow } from "./Constant";
+import {
+  CardObject,
+  CardFlower,
+  maxCardForOneRow,
+  CardStatus,
+} from "./Constant";
 import GameManager from "./GameManager";
 
 const { ccclass, property } = cc._decorator;
@@ -475,5 +480,24 @@ export default class ModelManager extends cc.Component {
       return -1;
     }
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  getHandCardsCount(): number {
+    const handCards = GameManager._instance.gameSetting.handCards;
+    const count = handCards.filter(
+      (card) =>
+        card.cardStatus === CardStatus.Initial ||
+        card.cardStatus === CardStatus.Pick ||
+        !card.cardStatus
+    ).length;
+    return count;
+  }
+
+  getHandCardsCountByStatus(cardStatus: number): number {
+    const handCards = GameManager._instance.gameSetting.handCards;
+    const count = handCards.filter(
+      (card) => card.cardStatus === cardStatus
+    ).length;
+    return count;
   }
 }
