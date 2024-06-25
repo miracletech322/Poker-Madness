@@ -53,7 +53,7 @@ export default class StartOptionDialog extends cc.Component {
   }
 
   public buttonStatusChanged(status: number) {
-    Global.instance.gameStartOption = status;
+    // Global.instance.gameStartOption = status;
 
     this.newGameButton.normalSprite = this.buttonNormalSpriteFrame;
     this.continueButton.normalSprite = this.buttonNormalSpriteFrame;

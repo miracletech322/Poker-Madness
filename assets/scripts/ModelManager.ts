@@ -36,7 +36,7 @@ export default class ModelManager extends cc.Component {
     return [
       {
         id: 0,
-        symbol: "A",
+        symbol: "Aces",
         value: 11,
         cardFlower: CardFlower.Spade,
         flowerId: 0,
@@ -44,7 +44,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 1,
-        symbol: "K",
+        symbol: "King",
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 1,
@@ -52,7 +52,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 2,
-        symbol: "Q",
+        symbol: "Queen",
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 2,
@@ -60,7 +60,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 3,
-        symbol: "J",
+        symbol: "Jack",
         value: 10,
         cardFlower: CardFlower.Spade,
         flowerId: 3,
@@ -140,7 +140,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 13,
-        symbol: "A",
+        symbol: "Aces",
         value: 11,
         cardFlower: CardFlower.Heart,
         flowerId: 0,
@@ -148,7 +148,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 14,
-        symbol: "K",
+        symbol: "King",
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 1,
@@ -156,7 +156,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 15,
-        symbol: "Q",
+        symbol: "Queen",
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 2,
@@ -164,7 +164,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 16,
-        symbol: "J",
+        symbol: "Jack",
         value: 10,
         cardFlower: CardFlower.Heart,
         flowerId: 3,
@@ -244,7 +244,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 26,
-        symbol: "A",
+        symbol: "Aces",
         value: 11,
         cardFlower: CardFlower.Cube,
         flowerId: 0,
@@ -252,7 +252,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 27,
-        symbol: "K",
+        symbol: "King",
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 1,
@@ -260,7 +260,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 28,
-        symbol: "Q",
+        symbol: "Queen",
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 2,
@@ -268,7 +268,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 29,
-        symbol: "J",
+        symbol: "Jack",
         value: 10,
         cardFlower: CardFlower.Cube,
         flowerId: 3,
@@ -348,7 +348,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 39,
-        symbol: "A",
+        symbol: "Aces",
         value: 11,
         cardFlower: CardFlower.Diamond,
         flowerId: 0,
@@ -356,7 +356,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 40,
-        symbol: "K",
+        symbol: "King",
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 1,
@@ -364,7 +364,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 41,
-        symbol: "Q",
+        symbol: "Queen",
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 2,
@@ -372,7 +372,7 @@ export default class ModelManager extends cc.Component {
       },
       {
         id: 42,
-        symbol: "J",
+        symbol: "Jack",
         value: 10,
         cardFlower: CardFlower.Diamond,
         flowerId: 3,
@@ -463,7 +463,7 @@ export default class ModelManager extends cc.Component {
         totalCardCount - 1
       );
       if (flag[random]) {
-        if ((i + 1) % totalCardCount === 0) {
+        if (i % totalCardCount === 0) {
           flag = flag.map((value) => false);
         } else {
           i--;
@@ -482,7 +482,7 @@ export default class ModelManager extends cc.Component {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  getHandCardsCount(): number {
+  public getHandCardsCount(): number {
     const handCards = GameManager._instance.gameSetting.handCards;
     const count = handCards.filter(
       (card) =>
@@ -493,7 +493,7 @@ export default class ModelManager extends cc.Component {
     return count;
   }
 
-  getHandCardsCountByStatus(cardStatus: number): number {
+  public getHandCardsCountByStatus(cardStatus: number): number {
     const handCards = GameManager._instance.gameSetting.handCards;
     const count = handCards.filter(
       (card) => card.cardStatus === cardStatus

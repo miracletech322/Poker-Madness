@@ -22,6 +22,4 @@ export default class Global{
         return this._instance;
     }
 
-    public round: number = 0;
-    public gameStartOption: GameStartOption = GameStartOption.NewRun;
 }

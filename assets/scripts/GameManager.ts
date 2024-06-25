@@ -8,10 +8,16 @@
 import {
   CardObject,
   CardStatus,
+  Direction,
+  GameProgress,
   GameSetting,
+  RoundFinishTypes,
   ScoreTypes,
+  SortTypes,
   maxCardForOneRow,
+  roundScore,
 } from "./Constant";
+import Global from "./Global";
 import ModelManager from "./ModelManager";
 import UIManager from "./UIManager";
 import { clientEvent } from "./framework/clientEvent";
@@ -40,22 +46,28 @@ export default class GameManager extends cc.Component {
     clientEvent.on("pickCard", this.pickCardEvent, this);
     clientEvent.on("roundStarted", this.roundStartedEvent, this);
     clientEvent.on("fillCardEvent", this.fillCardEvent, this);
+    clientEvent.on("cardHoverEvent", this.showCardTooltip, this);
   }
 
   protected onDisable(): void {
     clientEvent.off("pickCard", this.pickCardEvent, this);
     clientEvent.off("roundStarted", this.roundStartedEvent, this);
     clientEvent.off("fillCardEvent", this.fillCardEvent, this);
+    clientEvent.off("cardHoverEvent", this.showCardTooltip, this);
   }
 
   public roundInit() {
     this.gameSetting = {
       gameStart: false,
+      round: 0,
+      gameProgress: GameProgress.Init,
       totalCardCount: 52,
       remainCardCount: 52,
       score: 0,
+      reachingScore: 0,
       multi1: 0,
       multi2: 0,
+      scoreType: null,
       hands: 4,
       discards: 4,
       cash: 5,
@@ -65,54 +77,95 @@ export default class GameManager extends cc.Component {
       newCards: [],
       handCards: [],
       scoreLevel: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      sortType: SortTypes.Rank,
     };
-    ModelManager._instance.randomSortCards();
   }
 
-  updateGameSetting(newValue: GameSetting) {
+  public updateGameSetting(newValue: GameSetting) {
     this.gameSetting = { ...this.gameSetting, ...newValue };
     UIManager.instance.changeGameValues(this.gameSetting);
   }
 
-  roundStartedEvent(statusStart: boolean) {
-    this.updateGameSetting({ gameStart: true });
+  public roundStartedEvent() {
+    this.updateGameSetting({
+      gameStart: true,
+      round: this.gameSetting.round + 1,
+      totalCardCount: 52,
+      remainCardCount: 52,
+      score: 0,
+      reachingScore: roundScore[this.gameSetting.round],
+      multi1: 0,
+      multi2: 0,
+      hands: 4,
+      discards: 4,
+      cash: this.gameSetting.cash ?? 0,
+      ante: this.gameSetting.ante,
+      totalAnte: this.gameSetting.totalAnte,
+      remainHandCardsCount: 0,
+      newCards: [],
+      handCards: [],
+      scoreLevel: [...this.gameSetting.scoreLevel],
+      sortType: this.gameSetting.sortType,
+    });
+    ModelManager._instance.randomSortCards();
+    UIManager.instance.hideBlindSelectModals();
     this.fillCards();
   }
 
-  fillCards() {
-    const newCards = GameManager._instance.gameSetting.newCards;
-    const handCards = GameManager._instance.gameSetting.handCards;
+  public fillCards() {
+    const newCards = this.gameSetting.newCards;
+    const handCards = this.gameSetting.handCards;
     const newFilledCards: CardObject[] = [];
     const handCardsCount =
       GameManager._instance.gameSetting.remainHandCardsCount;
-    if (maxCardForOneRow > handCardsCount) {
-      while (true) {
-        if (handCards.length === maxCardForOneRow || newCards.length === 0)
-          break;
-        const newCard = newCards.shift();
-        newFilledCards.push(newCard);
-        handCards.push(newCard);
-      }
+    while (true) {
+      if (
+        handCards.length + newFilledCards.length === maxCardForOneRow ||
+        newCards.length === 0
+      )
+        break;
+      const newCard = newCards.shift();
+      newFilledCards.push(newCard);
     }
     UIManager.instance.fillCards(newFilledCards);
+    this.updateGameSetting({ gameProgress: GameProgress.FillingCard });
   }
 
-  pickCardEvent([pickStatus, cardId]: [CardStatus, number]) {
+  public addCardGroup(card: CardObject) {
+    this.gameSetting.handCards.push(card);
+  }
+
+  public updateArrangeForHandCards() {
+    let handCards = this.gameSetting.handCards;
+    const sortType = this.gameSetting.sortType;
+
+    sortType === SortTypes.Rank
+      ? handCards.sort((card1, card2) => card1.flowerId - card2.flowerId)
+      : sortType === SortTypes.Suit
+      ? handCards.sort((card1, card2) => card2.cardFlower - card1.cardFlower)
+      : null;
+
+    this.gameSetting.handCards = [...handCards];
+  }
+
+  public pickCardEvent([pickStatus, cardId]: [CardStatus, number]) {
     const cardIndex = this.gameSetting.handCards.findIndex(
       (card) => card.id === cardId
     );
     if (cardIndex !== -1) {
       this.gameSetting.handCards[cardIndex].cardStatus = pickStatus;
     }
+
+    UIManager.instance.displayMultiInfo();
   }
 
-  fillCardEvent(cardId: number) {
+  public fillCardEvent(cardId: number) {
     this.updateGameSetting({
       remainCardCount: this.gameSetting.remainCardCount - 1,
     });
   }
 
-  discardHandCards(cardId: number) {
+  public discardHandCards(cardId: number) {
     this.gameSetting.handCards = this.gameSetting.handCards.map((card) => {
       if (card.id === cardId) {
         return { ...card, cardStatus: CardStatus.Pop };
@@ -121,16 +174,19 @@ export default class GameManager extends cc.Component {
     });
   }
 
-  getSocreCardIdInPopedCards() {
+  public getSocreCardIdInPopedCards(cardStatus: CardStatus) {
     const popCards = this.gameSetting.handCards.filter(
-      (card) => card.cardStatus === CardStatus.Pop
+      (card) => card.cardStatus === cardStatus
     );
+    let scoreCards: number[] = [];
+    let scoreType: ScoreTypes;
+
+    if (popCards.length === 0) return { scoreCards, scoreType };
+
     const popCardsSoryByWeight = popCards.sort(
       (a, b) => a.flowerId - b.flowerId
     );
 
-    let scoreCards: number[] = [];
-    let scoreType: ScoreTypes;
     let rowCount = 1;
     let pairCount = [1, 1];
     let pairFlowerId = [-1, -1];
@@ -208,11 +264,10 @@ export default class GameManager extends cc.Component {
           scoreCards.push(card.id);
         });
     }
-    console.log({ popCards, scoreCards, scoreType });
     return { scoreCards, scoreType };
   }
 
-  removePopedCards() {
+  public removePopedCards() {
     const handCards = this.gameSetting.handCards;
     const updatedHandCards: CardObject[] = [];
     handCards.forEach((card) => {
@@ -221,5 +276,103 @@ export default class GameManager extends cc.Component {
       }
     });
     this.updateGameSetting({ handCards: updatedHandCards });
+  }
+
+  public updateScore() {
+    const score =
+      GameManager._instance.gameSetting.multi1 *
+      GameManager._instance.gameSetting.multi2;
+    this.updateGameSetting({
+      multi1: 0,
+      multi2: 0,
+      scoreType: null,
+    });
+    UIManager.instance.updateScore(score);
+  }
+
+  public getUpdatedCardWhenDragging(
+    updatedCard: CardObject[],
+    oriIndex: number,
+    updateIndex: number
+  ): CardObject[] {
+    let res: CardObject[] = [];
+    res = [
+      ...updatedCard.slice(0, oriIndex),
+      ...updatedCard.slice(oriIndex + 1),
+    ];
+    res.splice(updateIndex, 0, updatedCard[oriIndex]);
+    return res;
+  }
+
+  public rankSortHandle() {
+    this.updateGameSetting({
+      sortType: SortTypes.Rank,
+    });
+    UIManager.instance.rankSortHandle();
+  }
+
+  public suitSortHandle() {
+    this.updateGameSetting({
+      sortType: SortTypes.Suit,
+    });
+    UIManager.instance.suitSortHandle();
+  }
+
+  public showCardTooltip([cardId, status]: [number, boolean]) {
+    const handCards = this.gameSetting.handCards;
+    const index = handCards.findIndex((card) => card.id === cardId);
+    UIManager.instance.showCardTooltip(handCards[index], status, index);
+  }
+
+  public isFinishRound(): RoundFinishTypes {
+    const score = this.gameSetting.score;
+    const round = this.gameSetting.round;
+    if (score >= roundScore[round - 1]) {
+      return RoundFinishTypes.Success;
+    }
+    const hands = this.gameSetting.hands;
+    if (hands === 0) {
+      return RoundFinishTypes.Failed;
+    }
+
+    return RoundFinishTypes.None;
+  }
+
+  public showDeckModal() {
+    const cards = this.gameSetting.newCards;
+    let numberCount: number[] = new Array(13).fill(0);
+    let suitCount: number[] = new Array(4).fill(0);
+    let count: number[][] = Array.from({ length: 4 }, () =>
+      new Array(13).fill(0)
+    );
+
+    cards.forEach((card) => {
+      numberCount[card.flowerId]++;
+      suitCount[card.cardFlower]++;
+      count[card.cardFlower][card.flowerId]++;
+    });
+
+    clientEvent.dispatchEvent("getDeckInfoEvent", [
+      numberCount,
+      suitCount,
+      count,
+    ]);
+  }
+
+  public getRemainCardInfo() {
+    const cards = this.gameSetting.newCards;
+    let numberCount: number[] = new Array(13).fill(0);
+    let suitCount: number[] = new Array(4).fill(0);
+    let count: number[][] = Array.from({ length: 4 }, () =>
+      new Array(13).fill(0)
+    );
+
+    cards.forEach((card) => {
+      numberCount[card.flowerId]++;
+      suitCount[card.cardFlower]++;
+      count[card.cardFlower][card.flowerId]++;
+    });
+
+    return { numberCount, count };
   }
 }
