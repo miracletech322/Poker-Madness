@@ -80,7 +80,7 @@ export default class Card extends cc.Component {
     if (this.isDragging()) return;
     this.node.scale = 1.1;
     this.statusHover = true;
-    if (this.disable || !this.isEnablePickCard()) return;
+    if (this.disable) return;
     clientEvent.dispatchEvent("cardHoverEvent", [this.cardId, true]);
   }
 
@@ -88,7 +88,6 @@ export default class Card extends cc.Component {
     this.node.scale = 1;
     this.statusHover = false;
     if (this.disable) return;
-    if (!this.isEnablePickCard()) return;
     clientEvent.dispatchEvent("cardHoverEvent", [this.cardId, false]);
   }
 

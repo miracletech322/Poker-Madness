@@ -79,6 +79,7 @@ export default class GameManager extends cc.Component {
       scoreLevel: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       sortType: SortTypes.Rank,
     };
+    this.updateGameSetting({});
   }
 
   public updateGameSetting(newValue: GameSetting) {

@@ -33,6 +33,7 @@ export default class UIManager extends cc.Component {
   public static instance: UIManager = null;
 
   public deckModalStatus = false;
+  public cardsGroupPanelY: number;
 
   @property(cc.Prefab)
   startOptionDialog: cc.Prefab;
@@ -147,6 +148,8 @@ export default class UIManager extends cc.Component {
     this.deckModalNode.addChild(deck);
     deck.setPosition(cc.v3(0, 0, 0));
     this.deckModalNode.active = false;
+
+    this.cardsGroupPanelY = this.handCardsPanel.getPosition().y;
     console.log("uimanager loaded");
   }
 
@@ -194,6 +197,9 @@ export default class UIManager extends cc.Component {
   }
 
   public showBlindSelect() {
+    GameManager._instance.roundInit();
+    this.cardsGroup.removeAllChildren();
+
     if (this.blindSelectPoint.children.length === 0) {
       const enablePanel = cc.instantiate(this.blindSelectEnableGroup);
       const disablePanel1 = cc.instantiate(this.blindSelectDisableGroup);
@@ -919,11 +925,12 @@ export default class UIManager extends cc.Component {
       GameManager._instance.fillCards();
     } else if (isFinish === RoundFinishTypes.Failed) {
       this.loserModal.active = true;
+      const pos = this.loserModal.getPosition();
       cc.tween(this.loserModal)
         .to(
           0.2 / gameSpeed,
           {
-            position: cc.v3(0, 50, 0),
+            position: cc.v3(pos.x, 50, 0),
           },
           {
             easing: "quadInOut",
@@ -932,7 +939,7 @@ export default class UIManager extends cc.Component {
         .to(
           0.1 / gameSpeed,
           {
-            position: cc.v3(0, 0, 0),
+            position: cc.v3(pos.x, 0, 0),
           },
           {
             easing: "quadInOut",
@@ -991,10 +998,10 @@ export default class UIManager extends cc.Component {
       })
       .start();
 
-    const pos = this.cardsGroup.getPosition();
-    cc.tween(this.cardsGroup)
+    const pos = this.handCardsPanel.getPosition();
+    cc.tween(this.handCardsPanel)
       .to(0.1 / gameSpeed, {
-        position: cc.v3(pos.x, -100, 0),
+        position: cc.v3(pos.x, this.cardsGroupPanelY - 100, 0),
       })
       .start();
 
@@ -1009,23 +1016,19 @@ export default class UIManager extends cc.Component {
     this.deckModalNode.active = false;
 
     const deckModal = this.deckModalNode.children[0];
+    this.playButtonGroup.active = true;
 
     cc.tween(deckModal)
-      .call(() => {
-        this.playButtonGroup.active = true;
-      })
+      .call(() => {})
       .to(0.1 / gameSpeed, {
         position: cc.v3(0, 100, 0),
       })
-      .call(() => {
-        deckModal.getComponent(Deck).isMoving = false;
-      })
       .start();
 
-    const posCards = this.cardsGroup.getPosition();
-    cc.tween(this.cardsGroup)
+    const posCards = this.handCardsPanel.getPosition();
+    cc.tween(this.handCardsPanel)
       .to(0.1 / gameSpeed, {
-        position: cc.v3(posCards.x, 0, 0),
+        position: cc.v3(posCards.x, this.cardsGroupPanelY, 0),
       })
       .start();
   }
@@ -1098,11 +1101,12 @@ export default class UIManager extends cc.Component {
   }
 
   public loserNewRun() {
+    const pos = this.loserModal.getPosition();
     cc.tween(this.loserModal)
       .to(
         0.1 / gameSpeed,
         {
-          position: cc.v3(0, 50, 0),
+          position: cc.v3(pos.x, 50, 0),
         },
         {
           easing: "quadInOut",
@@ -1111,7 +1115,7 @@ export default class UIManager extends cc.Component {
       .to(
         0.1 / gameSpeed,
         {
-          position: cc.v3(0, -1050, 0),
+          position: cc.v3(pos.x, -1050, 0),
         },
         {
           easing: "quadInOut",
