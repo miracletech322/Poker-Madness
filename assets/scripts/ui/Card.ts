@@ -77,16 +77,18 @@ export default class Card extends cc.Component {
   protected update(dt: number): void {}
 
   onMouseEnter() {
-    if (!this.isEnablePickCard() || this.isDragging() || this.disable) return;
+    if (this.isDragging()) return;
     this.node.scale = 1.1;
     this.statusHover = true;
+    if (this.disable || !this.isEnablePickCard()) return;
     clientEvent.dispatchEvent("cardHoverEvent", [this.cardId, true]);
   }
 
   onMouseLeave() {
-    if (!this.isEnablePickCard() || this.disable) return;
     this.node.scale = 1;
     this.statusHover = false;
+    if (this.disable) return;
+    if (!this.isEnablePickCard()) return;
     clientEvent.dispatchEvent("cardHoverEvent", [this.cardId, false]);
   }
 

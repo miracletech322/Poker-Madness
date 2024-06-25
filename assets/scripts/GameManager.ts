@@ -139,11 +139,13 @@ export default class GameManager extends cc.Component {
     let handCards = this.gameSetting.handCards;
     const sortType = this.gameSetting.sortType;
 
-    sortType === SortTypes.Rank
-      ? handCards.sort((card1, card2) => card1.flowerId - card2.flowerId)
-      : sortType === SortTypes.Suit
-      ? handCards.sort((card1, card2) => card2.cardFlower - card1.cardFlower)
-      : null;
+    if (sortType === SortTypes.Rank) {
+      handCards.sort((card1, card2) => card1.flowerId - card2.flowerId);
+    } else if (sortType === SortTypes.Suit) {
+      handCards.sort((card1, card2) => card1.flowerId - card2.flowerId);
+      handCards.sort((card1, card2) => card1.cardFlower - card2.cardFlower);
+    }
+    console.log({ handCards });
 
     this.gameSetting.handCards = [...handCards];
   }

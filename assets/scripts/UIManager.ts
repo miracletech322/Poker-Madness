@@ -345,7 +345,11 @@ export default class UIManager extends cc.Component {
 
   public HandButtonClick() {
     const handCards = GameManager._instance.gameSetting.handCards;
-    if (handCards.length === 0) return;
+    if (
+      handCards.length === 0 ||
+      GameManager._instance.gameSetting.gameStart === false
+    )
+      return;
 
     const pickCardCount = ModelManager._instance.getHandCardsCountByStatus(
       CardStatus.Pick
@@ -478,10 +482,18 @@ export default class UIManager extends cc.Component {
   }
 
   public rankSortHandle() {
+    GameManager._instance.updateGameSetting({
+      sortType: SortTypes.Rank,
+    });
     this.arrangeHandCards(0, 0, GameManager._instance.gameSetting.sortType);
   }
 
-  public suitSortHandle() {}
+  public suitSortHandle() {
+    GameManager._instance.updateGameSetting({
+      sortType: SortTypes.Suit,
+    });
+    this.arrangeHandCards(0, 0, GameManager._instance.gameSetting.sortType);
+  }
 
   public arrangeHandCards(
     totalCount: number,
@@ -494,13 +506,14 @@ export default class UIManager extends cc.Component {
 
     let sortHandsCards = [...handCards];
 
-    sortType === SortTypes.Rank
-      ? sortHandsCards.sort((card1, card2) => card1.flowerId - card2.flowerId)
-      : sortType === SortTypes.Suit
-      ? sortHandsCards.sort(
-          (card1, card2) => card2.cardFlower - card1.cardFlower
-        )
-      : null;
+    if (sortType === SortTypes.Rank) {
+      sortHandsCards.sort((card1, card2) => card1.flowerId - card2.flowerId);
+    } else if (sortType === SortTypes.Suit) {
+      sortHandsCards.sort((card1, card2) => card1.flowerId - card2.flowerId);
+      sortHandsCards.sort(
+        (card1, card2) => card1.cardFlower - card2.cardFlower
+      );
+    }
 
     let availableIndex = 0;
     sortHandsCards.forEach((card, index) => {
@@ -953,7 +966,10 @@ export default class UIManager extends cc.Component {
   }
 
   public onBackCardMouseEnter() {
-    if (GameManager._instance.gameSetting.gameProgress !== GameProgress.Init) {
+    if (
+      GameManager._instance.gameSetting.gameProgress !== GameProgress.Init ||
+      GameManager._instance.gameSetting.gameStart === false
+    ) {
       return;
     }
     if (this.deckModalStatus) {
@@ -961,29 +977,24 @@ export default class UIManager extends cc.Component {
     }
     this.deckModalStatus = true;
     this.deckModalNode.active = true;
-    const pos = this.deckModalNode.getPosition();
 
     const deckModal = this.deckModalNode.children[0];
-    if (deckModal.getComponent(Deck).isMoving) {
-      return;
-    }
-    deckModal.getComponent(Deck).isMoving = true;
-    cc.tween(this.deckModalNode)
+    cc.tween(deckModal)
       .call(() => {
         this.playButtonGroup.active = false;
       })
       .to(0.1 / gameSpeed, {
-        position: cc.v3(pos.x, pos.y - 100, 0),
+        position: cc.v3(0, -100, 0),
       })
       .call(() => {
         deckModal.getComponent(Deck).isMoving = false;
       })
       .start();
 
-    const posCards = this.cardsGroup.getPosition();
+    const pos = this.cardsGroup.getPosition();
     cc.tween(this.cardsGroup)
       .to(0.1 / gameSpeed, {
-        position: cc.v3(posCards.x, posCards.y - 100, 0),
+        position: cc.v3(pos.x, -100, 0),
       })
       .start();
 
@@ -998,18 +1009,13 @@ export default class UIManager extends cc.Component {
     this.deckModalNode.active = false;
 
     const deckModal = this.deckModalNode.children[0];
-    if (deckModal.getComponent(Deck).isMoving) {
-      return;
-    }
-    deckModal.getComponent(Deck).isMoving = true;
 
-    const pos = this.deckModalNode.getPosition();
-    cc.tween(this.deckModalNode)
+    cc.tween(deckModal)
       .call(() => {
         this.playButtonGroup.active = true;
       })
       .to(0.1 / gameSpeed, {
-        position: cc.v3(pos.x, pos.y + 100, 0),
+        position: cc.v3(0, 100, 0),
       })
       .call(() => {
         deckModal.getComponent(Deck).isMoving = false;
@@ -1019,12 +1025,13 @@ export default class UIManager extends cc.Component {
     const posCards = this.cardsGroup.getPosition();
     cc.tween(this.cardsGroup)
       .to(0.1 / gameSpeed, {
-        position: cc.v3(posCards.x, posCards.y + 100, 0),
+        position: cc.v3(posCards.x, 0, 0),
       })
       .start();
   }
 
   public showFullDeckModal() {
+    if (GameManager._instance.gameSetting.gameStart === false) return;
     if (this.fullDeckModalNode.children.length === 0) {
       const fullDeckModal = cc.instantiate(this.fullDeckModal);
       this.fullDeckModalNode.addChild(fullDeckModal);

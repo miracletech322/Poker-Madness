@@ -41,8 +41,6 @@ export default class Deck extends cc.Component {
 
   protected onDestroy(): void {}
 
-  public isMoving: boolean;
-
   start() {}
 
   protected onEnable(): void {
