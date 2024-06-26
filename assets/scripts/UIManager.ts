@@ -103,9 +103,6 @@ export default class UIManager extends cc.Component {
   pockerHands: cc.RichText;
 
   @property(cc.Label)
-  scoreText: cc.Label;
-
-  @property(cc.Label)
   entryScore: cc.Label;
 
   @property(cc.Node)
@@ -287,10 +284,8 @@ export default class UIManager extends cc.Component {
       }</size></color> <color=#ffffff><size=17>lvl.${(
         gameSetting.scoreLevel[gameSetting.scoreType] + 1
       ).toString()}</size></color>`;
-      this.scoreText.node.active = true;
     } else {
       this.pockerHands.string = "";
-      this.scoreText.node.active = false;
     }
   }
 
