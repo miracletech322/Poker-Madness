@@ -328,25 +328,6 @@ export default class UIManager extends cc.Component {
     }
   }
 
-  public loadImageAtlas() {
-    return new Promise((resolve, reject) => {
-      cc.loader.loadRes(
-        "/images/TexturePacker/Sprites",
-        cc.SpriteAtlas,
-        function (err, imageAtlas) {
-          if (err) {
-            console.log("error: loading card atlas", err);
-            reject(err);
-            return;
-          }
-          console.log("Loaded end atlas successfully");
-          GameManager._instance.imageAtlas = imageAtlas;
-          resolve();
-        }
-      );
-    });
-  }
-
   // update (dt) {}
 
   public HandButtonClick() {

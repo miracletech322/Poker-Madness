@@ -34,7 +34,6 @@ export default class GameManager extends cc.Component {
 
   protected onLoad(): void {
     GameManager._instance = this;
-    UIManager.instance.loadImageAtlas();
     console.log("GameManager loaded");
   }
 

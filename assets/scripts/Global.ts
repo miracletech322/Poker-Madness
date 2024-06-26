@@ -7,19 +7,20 @@
 
 import { GameStartOption } from "./Constant";
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class Global{
-    static _instance: Global;
+export default class Global {
+  static _instance: Global;
 
-    static get instance() {
-        if (this._instance) {
-            return this._instance;
-        }
-
-        this._instance = new Global();
-        return this._instance;
+  static get instance() {
+    if (this._instance) {
+      return this._instance;
     }
 
+    this._instance = new Global();
+    return this._instance;
+  }
+
+  public imageAtlas = "";
 }

@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import { loadImgAtlas } from "./AssetLoader";
 import { GameStartOption } from "./Constant";
 import Global from "./Global";
 import { clientEvent } from "./framework/clientEvent";
@@ -17,9 +18,21 @@ export default class MainMenuManager extends cc.Component {
   @property(cc.Prefab)
   startOptionDialog: cc.Prefab;
 
+  @property(cc.Button)
+  background: cc.Button;
+
   // LIFE-CYCLE CALLBACKS:
 
-  // onLoad () {}
+  onLoad() {
+    loadImgAtlas()
+      .then(() => {
+        console.log("successfully loaded atlas file");
+        this.background.node.active = false;
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  }
 
   start() {}
 

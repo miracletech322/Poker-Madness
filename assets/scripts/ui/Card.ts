@@ -7,6 +7,7 @@ import {
   spacingForCard,
 } from "../Constant";
 import GameManager from "../GameManager";
+import Global from "../Global";
 import UIManager from "../UIManager";
 import { clientEvent } from "../framework/clientEvent";
 
@@ -65,7 +66,7 @@ export default class Card extends cc.Component {
 
   setCardInfo(card: CardObject) {
     this.cardId = card.id;
-    this.sprite.spriteFrame = GameManager._instance.imageAtlas.getSpriteFrame(
+    this.sprite.spriteFrame = Global.instance.imageAtlas.getSpriteFrame(
       card.background
     );
   }
