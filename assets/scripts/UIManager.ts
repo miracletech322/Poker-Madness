@@ -98,11 +98,8 @@ export default class UIManager extends cc.Component {
   @property(cc.Label)
   reachingScore: cc.Label;
 
-  @property(cc.Label)
-  scoreName: cc.Label;
-
-  @property(cc.Label)
-  scoreLevel: cc.Label;
+  @property(cc.RichText)
+  pockerHands: cc.RichText;
 
   @property(cc.Label)
   scoreText: cc.Label;
@@ -278,17 +275,20 @@ export default class UIManager extends cc.Component {
     gameSetting.round >= 0 &&
       (this.roundValue.string = gameSetting.round.toString());
     if (gameSetting.scoreType !== null) {
-      this.scoreName.string =
+      this.pockerHands.string = `<color=#2a2a48><size=${
         scoreRule[gameSetting.scoreType][
-          gameSetting.scoreLevel[gameSetting.scoreType]
-        ].name;
-      this.scoreLevel.string = (
+          GameManager._instance.gameSetting.scoreLevel[gameSetting.scoreType]
+        ].size
+      }>${
+        scoreRule[gameSetting.scoreType][
+          GameManager._instance.gameSetting.scoreLevel[gameSetting.scoreType]
+        ].name
+      }</size></color> <color=#ffffff><size=17>lvl.${(
         gameSetting.scoreLevel[gameSetting.scoreType] + 1
-      ).toString();
+      ).toString()}</size></color>`;
       this.scoreText.node.active = true;
     } else {
-      this.scoreName.string = "";
-      this.scoreLevel.string = "";
+      this.pockerHands.string = "";
       this.scoreText.node.active = false;
     }
   }
@@ -626,10 +626,6 @@ export default class UIManager extends cc.Component {
       ].multi2;
     this.multiValue1.string = multi1.toString();
     this.multiValue2.string = multi2.toString();
-    this.scoreName.fontSize =
-      scoreRule[scoreType][
-        GameManager._instance.gameSetting.scoreLevel[scoreType]
-      ].size;
     GameManager._instance.updateGameSetting({
       multi1,
       multi2,
