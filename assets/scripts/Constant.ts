@@ -78,6 +78,13 @@ export const suitName = {
   [CardFlower.Diamond]: "Diamonds",
 };
 
+export const suitColor = {
+  [CardFlower.Spade]: "#291c7f",
+  [CardFlower.Heart]: "#ef164f",
+  [CardFlower.Cube]: "#3b4245",
+  [CardFlower.Diamond]: "#df5424",
+};
+
 export enum ScoreTypes {
   StraightFlush, //0
   FourOfAKind, // 1

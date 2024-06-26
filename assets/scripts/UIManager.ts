@@ -16,6 +16,7 @@ import {
   gameSpeed,
   scoreRule,
   spacingForCard,
+  suitColor,
   suitName,
 } from "./Constant";
 import GameManager from "./GameManager";
@@ -113,11 +114,11 @@ export default class UIManager extends cc.Component {
   @property(cc.Node)
   cardTooltipBox: cc.Node;
 
-  @property(cc.Label)
-  cardName: cc.Label;
+  @property(cc.RichText)
+  cardName: cc.RichText;
 
-  @property(cc.Label)
-  cardValue: cc.Label;
+  @property(cc.RichText)
+  cardValue: cc.RichText;
 
   @property(cc.Node)
   winnerModal: cc.Node;
@@ -891,8 +892,10 @@ export default class UIManager extends cc.Component {
     this.cardTooltipBox.setPosition(
       new cc.Vec3(tooltipPos.x, tooltipPos.y + cardNodes[index].height, 0)
     );
-    this.cardName.string = card.symbol + " of " + suitName[card.cardFlower];
-    this.cardValue.string = "+" + card.value + " chips";
+    this.cardName.string = `${card.symbol} of <color=${
+      suitColor[card.cardFlower]
+    }>${suitName[card.cardFlower]}</color>`;
+    this.cardValue.string = `<color=#6392f2>+${card.value}</color=#6392f2> chips`;
     this.cardTooltipBox.active = status;
   }
 
@@ -970,9 +973,7 @@ export default class UIManager extends cc.Component {
       .to(0.1 / gameSpeed, {
         position: cc.v3(0, -100, 0),
       })
-      .call(() => {
-        deckModal.getComponent(Deck).isMoving = false;
-      })
+      .call(() => {})
       .start();
 
     const pos = this.handCardsPanel.getPosition();

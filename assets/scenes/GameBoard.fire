@@ -7233,7 +7233,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 130,
+      "width": 140,
       "height": 80
     },
     "_anchorPoint": {
@@ -7295,7 +7295,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 125,
+      "width": 135,
       "height": 75
     },
     "_anchorPoint": {
@@ -7395,7 +7395,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
+      "width": 130,
       "height": 30
     },
     "_anchorPoint": {
@@ -7450,15 +7450,15 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 51,
-      "g": 49,
-      "b": 49,
+      "r": 48,
+      "g": 46,
+      "b": 46,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 0,
-      "height": 18.9
+      "height": 63
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7492,42 +7492,30 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "786+t0GzlNzJ5vnW4kxTpn"
+    "_id": "ecgwbW9rZGp4FXAHuXXr9N"
   },
   {
-    "__type__": "cc.Label",
+    "__type__": "cc.RichText",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 144
     },
     "_enabled": true,
-    "_materials": [
-      {
-        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
-      }
-    ],
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_string": "",
+    "_fontFamily": "Arial",
+    "_isSystemFontUsed": false,
     "_N$string": "",
-    "_fontSize": 15,
-    "_lineHeight": 15,
-    "_enableWrapText": true,
-    "_N$file": {
+    "_N$horizontalAlign": 0,
+    "_N$fontSize": 16,
+    "_N$font": {
       "__uuid__": "a8b969a4-b9cf-42cb-be98-247e40f32204"
     },
-    "_isSystemFontUsed": false,
-    "_spacingX": 0,
-    "_batchAsBitmap": false,
-    "_styleFlags": 0,
-    "_underlineHeight": 0,
-    "_N$horizontalAlign": 1,
-    "_N$verticalAlign": 1,
-    "_N$fontFamily": "Arial",
-    "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "ceuYJxQPRAlq4v9neUTiEO"
+    "_N$maxWidth": 0,
+    "_N$lineHeight": 50,
+    "_N$imageAtlas": null,
+    "_N$handleTouchEvent": true,
+    "_id": "65LF8UlLVESYVcbJhTYbMY"
   },
   {
     "__type__": "cc.Sprite",
@@ -7592,7 +7580,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
+      "width": 130,
       "height": 40
     },
     "_anchorPoint": {
@@ -7647,15 +7635,15 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 92,
-      "g": 86,
-      "b": 86,
+      "r": 70,
+      "g": 67,
+      "b": 67,
       "a": 255
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
-      "height": 25.2
+      "width": 130,
+      "height": 63
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -7689,42 +7677,30 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "fc9aX+QDBOyYSPjcq8Kjm+"
+    "_id": "97djTCo41GoZyM/6GpMgXV"
   },
   {
-    "__type__": "cc.Label",
+    "__type__": "cc.RichText",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 148
     },
     "_enabled": true,
-    "_materials": [
-      {
-        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
-      }
-    ],
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_string": "",
-    "_N$string": "",
-    "_fontSize": 20,
-    "_lineHeight": 20,
-    "_enableWrapText": true,
-    "_N$file": {
-      "__uuid__": "a8b969a4-b9cf-42cb-be98-247e40f32204"
-    },
+    "_fontFamily": "Arial",
     "_isSystemFontUsed": false,
-    "_spacingX": 0,
-    "_batchAsBitmap": false,
-    "_styleFlags": 0,
-    "_underlineHeight": 0,
-    "_N$horizontalAlign": 1,
-    "_N$verticalAlign": 1,
-    "_N$fontFamily": "Arial",
-    "_N$overflow": 0,
+    "_N$string": "",
+    "_N$horizontalAlign": 0,
+    "_N$fontSize": 20,
+    "_N$font": {
+      "__uuid__": "ff9a9bc0-ada4-447d-8500-e11bebd8ada0"
+    },
     "_N$cacheMode": 0,
-    "_id": "c76PNMvJ5EHb+35yEma4B+"
+    "_N$maxWidth": 0,
+    "_N$lineHeight": 50,
+    "_N$imageAtlas": null,
+    "_N$handleTouchEvent": true,
+    "_id": "981Un87gpH1LkO8jV9uGef"
   },
   {
     "__type__": "cc.Sprite",
