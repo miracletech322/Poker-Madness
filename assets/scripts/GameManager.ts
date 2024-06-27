@@ -266,6 +266,7 @@ export default class GameManager extends cc.Component {
           scoreCards.push(card.id);
         });
     }
+    console.log({ scoreCards, scoreType });
     return { scoreCards, scoreType };
   }
 
