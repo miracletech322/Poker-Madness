@@ -20,6 +20,7 @@ import {
   suitName,
 } from "./Constant";
 import GameManager from "./GameManager";
+import Global from "./Global";
 import ModelManager from "./ModelManager";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
@@ -637,7 +638,7 @@ export default class UIManager extends cc.Component {
     const cards: cc.Node[] = this.cardsGroup.children;
     let realIndex = 0;
 
-    // move up picked cards
+    // move up good pair cards
     handCards.forEach((card, index) => {
       if (card.cardStatus !== CardStatus.Pop) return;
       const id = scoreCards.find((score) => score === card.id);
@@ -646,9 +647,10 @@ export default class UIManager extends cc.Component {
         cc.tween(cards[index])
           .delay((0.5 + realIndex * 0.05) / gameSpeed)
           .to(0.1 / gameSpeed, {
-            position: cc.v3(pos.x, pos.y + 50, 0),
+            position: cc.v3(pos.x, pos.y + 30, 0),
           })
           .start();
+
         realIndex++;
       }
     });
@@ -692,6 +694,29 @@ export default class UIManager extends cc.Component {
             }
           )
           .call(() => {
+            // score display for each good pair cards
+            const scoreLabelNode = new cc.Node();
+            const scoreLabel = scoreLabelNode.addComponent(cc.Label);
+            scoreLabel.string = "+" + card.value.toString();
+            scoreLabelNode.setPosition(
+              cc.v3(0, cards[index].height / 2 + 15, 0)
+            );
+            scoreLabel.font = Global.instance.font;
+            scoreLabelNode.opacity = 0;
+            cards[index].addChild(scoreLabelNode);
+
+            cc.tween(scoreLabelNode)
+              .to(0.1 / gameSpeed, { opacity: 255 * 0.3 })
+              .to(0.1 / gameSpeed, { opacity: 255 * 0.6 })
+              .to(0.1 / gameSpeed, { opacity: 255 })
+              .delay(0.3 / gameSpeed)
+              .to(0.1 / gameSpeed, { opacity: 255 * 0.6 })
+              .to(0.1 / gameSpeed, { opacity: 255 * 0.3 })
+              .call(() => {
+                scoreLabelNode.removeComponent(cc.Label);
+              })
+              .start();
+
             const updatedMulti1 =
               card.value + GameManager._instance.gameSetting.multi1;
             GameManager._instance.updateGameSetting({

@@ -23,4 +23,5 @@ export default class Global {
   }
 
   public imageAtlas = "";
+  public font: cc.Font;
 }

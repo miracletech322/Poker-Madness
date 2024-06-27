@@ -1,4 +1,3 @@
-
 import Global from "./Global";
 
 export const loadImgAtlas = (): Promise<void> => {
@@ -17,5 +16,17 @@ export const loadImgAtlas = (): Promise<void> => {
         resolve();
       }
     );
+  });
+};
+
+export const loadFont = (): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    cc.resources.load("fonts/Dosis-Bold", cc.Font, (error, font: cc.Font) => {
+      if (error) {
+        console.log("Failed to load font: ", error);
+        return;
+      }
+      Global.instance.font = font;
+    });
   });
 };
