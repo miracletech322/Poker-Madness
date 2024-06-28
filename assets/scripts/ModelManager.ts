@@ -8,7 +8,6 @@
 import {
   CardObject,
   CardFlower,
-  maxCardForOneRow,
   CardStatus,
 } from "./Constant";
 import GameManager from "./GameManager";

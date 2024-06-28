@@ -192,8 +192,8 @@ export default class UIManager extends cc.Component {
     clientEvent.off("FullDeckHideEvent", this.hideFullDeckModal, this);
   }
 
+  // show blind round select panel
   public showBlindSelect() {
-    GameManager._instance.roundInit();
     this.cardsGroup.removeAllChildren();
 
     if (this.blindSelectPoint.children.length === 0) {
@@ -215,7 +215,7 @@ export default class UIManager extends cc.Component {
         .to(
           0.2 / gameSpeed,
           {
-            position: cc.v3(posX, 50, 0),
+            position: cc.v3(posX, 100, 0),
           },
           {
             easing: "quadInOut",
@@ -228,26 +228,26 @@ export default class UIManager extends cc.Component {
     });
   }
 
+  // hide and remove blind round select panel
   public hideBlindSelectModals() {
     this.blindSelectPoint.children.forEach((node, index) => {
-      console.log(index);
       const pos = node.getPosition();
       cc.tween(node)
         .delay((index * 0.1) / gameSpeed)
         .to(0.1 / gameSpeed, {
-          position: cc.v3(pos.x, 50, 0),
+          position: cc.v3(pos.x, 100, 0),
         })
         .to(0.2 / gameSpeed, {
           position: cc.v3(pos.x, -1000, 0),
+        })
+        .call(() => {
+          node.destroy();
         })
         .start();
     });
   }
 
-  public showStartOptionDialog() {
-    uiManager.instance.showDialog("StartOption", this.startOptionDialog);
-  }
-
+  // UI update for game setting change
   public changeGameValues(gameSetting: GameSetting) {
     gameSetting.score >= 0 &&
       (this.scoreValue.string = gameSetting.score.toString());
@@ -290,13 +290,19 @@ export default class UIManager extends cc.Component {
     }
   }
 
+  // fill hand cards with new cards
   public fillCards(newFilledCards: CardObject[]) {
-    let fillEndIndex = 0;
+    GameManager._instance.updateGameSetting({
+      gameProgress: GameProgress.FillingCard,
+    });
+
+    let animationIndex = 0;
     for (let i = 0; i < newFilledCards.length; i++) {
       const card = newFilledCards[i];
       const newCard = cc.instantiate(this.card);
       newCard.getComponent(Card).setCardInfo(card);
 
+      // new filled card animation
       const backCardWorldPos = this.backCard.convertToWorldSpaceAR(cc.v2(0, 0));
       const initialPos = this.cardsGroup.convertToNodeSpaceAR(backCardWorldPos);
       newCard.setPosition(initialPos);
@@ -311,15 +317,17 @@ export default class UIManager extends cc.Component {
             i + 1,
             GameManager._instance.gameSetting.sortType
           );
-          fillEndIndex++;
-          if (fillEndIndex === newFilledCards.length) {
+          animationIndex++;
+          if (animationIndex === newFilledCards.length) {
             GameManager._instance.updateGameSetting({
               gameProgress: GameProgress.Init,
             });
           }
         })
         .call(() => {
-          clientEvent.dispatchEvent("fillCardEvent", card.id);
+          GameManager._instance.updateGameSetting({
+            remainCardCount: GameManager._instance.gameSetting.newCards.length,
+          });
         })
         .start();
     }
@@ -479,6 +487,7 @@ export default class UIManager extends cc.Component {
     this.arrangeHandCards(0, 0, GameManager._instance.gameSetting.sortType);
   }
 
+  // sort hand cards(totalCount: new cards count, cardIndex: new card index)
   public arrangeHandCards(
     totalCount: number,
     cardIndex: number,
@@ -621,8 +630,6 @@ export default class UIManager extends cc.Component {
       scoreRule[scoreType][
         GameManager._instance.gameSetting.scoreLevel[scoreType]
       ].multi2;
-    this.multiValue1.string = multi1.toString();
-    this.multiValue2.string = multi2.toString();
     GameManager._instance.updateGameSetting({
       multi1,
       multi2,

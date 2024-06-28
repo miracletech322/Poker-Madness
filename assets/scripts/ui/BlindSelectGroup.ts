@@ -20,6 +20,6 @@ export default class BlindSelectGroup extends cc.Component {
   hide() {}
 
   public selectRound() {
-    clientEvent.dispatchEvent("roundStarted", []);
+    clientEvent.dispatchEvent("roundStartedEvent", []);
   }
 }

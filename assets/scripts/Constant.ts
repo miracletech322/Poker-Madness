@@ -9,6 +9,7 @@
 export interface GameSetting {
   gameStart?: boolean;
   round?: number;
+  maxCountForHandCards?: number;
   gameProgress?: GameProgress;
   totalCardCount?: number;
   remainCardCount?: number;
@@ -22,7 +23,6 @@ export interface GameSetting {
   cash?: number;
   ante?: number;
   totalAnte?: number;
-  remainHandCardsCount?: number;
   newCards?: CardObject[];
   handCards?: CardObject[];
   scoreLevel?: number[];
@@ -65,11 +65,11 @@ export enum RoundFinishTypes {
 }
 
 export const max_round: number = 5;
-export const maxCardForOneRow = 8;
 export const gameSpeed = 1;
 
 export const cardPopDistance = 30;
 export const spacingForCard = 60;
+export const roundScore = [300, 500, 700];
 
 export const suitName = {
   [CardFlower.Spade]: "Spades",
@@ -199,4 +199,3 @@ export const scoreRule = {
   ],
 };
 
-export const roundScore = [300, 500, 700];
