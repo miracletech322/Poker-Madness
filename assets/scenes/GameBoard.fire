@@ -2156,7 +2156,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "RunInfoButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 39
@@ -2531,7 +2531,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "OptionsButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 46
@@ -4231,7 +4231,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "New Label",
+    "_name": "atLeastScoreLabel",
     "_objFlags": 0,
     "_parent": {
       "__id__": 79
@@ -4921,7 +4921,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "PlayHandsButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 92
@@ -5308,7 +5308,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "DiscardButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 100
@@ -7642,7 +7642,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 130,
+      "width": 0,
       "height": 63
     },
     "_anchorPoint": {
@@ -9873,6 +9873,48 @@
     },
     "fullDeckModal": {
       "__uuid__": "fede91f0-6614-4623-a21e-00fce46f44ea"
+    },
+    "blindTitleLabel": {
+      "__id__": 13
+    },
+    "atLeastScoreLabel": {
+      "__id__": 81
+    },
+    "roundScoreLabel": {
+      "__id__": 16
+    },
+    "runInfoButtonLabel": {
+      "__id__": 41
+    },
+    "optionsButtonLabel": {
+      "__id__": 48
+    },
+    "handsLabel": {
+      "__id__": 54
+    },
+    "discardsLabel": {
+      "__id__": 59
+    },
+    "anteLabel": {
+      "__id__": 67
+    },
+    "roundLabel": {
+      "__id__": 76
+    },
+    "playHandButtonLabel": {
+      "__id__": 94
+    },
+    "discardButtonLabel": {
+      "__id__": 102
+    },
+    "sortHandLabel": {
+      "__id__": 109
+    },
+    "rankButtonLabel": {
+      "__id__": 113
+    },
+    "suitButtonLabel": {
+      "__id__": 121
     },
     "_id": "d33lvRTtdEgZ+a7HfTNFQA"
   },

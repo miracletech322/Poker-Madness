@@ -10,6 +10,7 @@ import { GameStartOption } from "./Constant";
 import Global from "./Global";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
+import { T, loadI18n, setLanguage } from "./i18n";
 
 const { ccclass, property } = cc._decorator;
 
@@ -20,6 +21,12 @@ export default class MainMenuManager extends cc.Component {
 
   @property(cc.Button)
   background: cc.Button;
+
+  @property(cc.Label)
+  playButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  collectionButtonLabel: cc.Label;
 
   // LIFE-CYCLE CALLBACKS:
 
@@ -40,6 +47,11 @@ export default class MainMenuManager extends cc.Component {
       .catch((err) => {
         console.log({ err });
       });
+
+    loadI18n();
+
+    this.playButtonLabel.string = T("play");
+    this.collectionButtonLabel.string = T("collection");
   }
 
   start() {}

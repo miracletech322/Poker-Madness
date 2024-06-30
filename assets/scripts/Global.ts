@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
 import { GameStartOption } from "./Constant";
+import { Language, Translations } from "./i18n";
 
 const { ccclass, property } = cc._decorator;
 
@@ -24,4 +25,6 @@ export default class Global {
 
   public imageAtlas = "";
   public font: cc.Font;
+  public i18n: { [key in Language]: Translations };
+  public language: Language = "en";
 }

@@ -309,7 +309,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "NewGameButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 4
@@ -737,7 +737,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "ContinueButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 15
@@ -1165,7 +1165,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "ChallengeButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 26
@@ -2607,7 +2607,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "PlayButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 65
@@ -3373,6 +3373,18 @@
     },
     "challengeButton": {
       "__id__": 33
+    },
+    "newGameButtonLabel": {
+      "__id__": 6
+    },
+    "continueButtonLabel": {
+      "__id__": 17
+    },
+    "challengeButtonLabel": {
+      "__id__": 28
+    },
+    "playButtonLabel": {
+      "__id__": 67
     },
     "backButton": {
       "__id__": 83

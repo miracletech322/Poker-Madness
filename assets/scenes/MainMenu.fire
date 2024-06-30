@@ -546,7 +546,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "PlayButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 9
@@ -621,8 +621,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "PLAY",
-    "_N$string": "PLAY",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 38,
     "_lineHeight": 38,
     "_enableWrapText": false,
@@ -935,7 +935,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Label",
+    "_name": "CollectionButtonLabel",
     "_objFlags": 512,
     "_parent": {
       "__id__": 17
@@ -1010,8 +1010,8 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "COLLECTION",
-    "_N$string": "COLLECTION",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 36,
     "_lineHeight": 40,
     "_enableWrapText": false,
@@ -2029,6 +2029,12 @@
     },
     "background": {
       "__id__": 36
+    },
+    "playButtonLabel": {
+      "__id__": 11
+    },
+    "collectionButtonLabel": {
+      "__id__": 19
     },
     "_id": "37/IjmalZNapA6GP3WT+bu"
   }

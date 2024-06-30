@@ -2279,6 +2279,18 @@
       "__id__": 1
     },
     "_enabled": true,
+    "upcomingLabel": {
+      "__id__": 12
+    },
+    "scoreAtLeastLabel": {
+      "__id__": 35
+    },
+    "rewardLabel": {
+      "__id__": 44
+    },
+    "orLabel": {
+      "__id__": 49
+    },
     "_id": ""
   },
   {

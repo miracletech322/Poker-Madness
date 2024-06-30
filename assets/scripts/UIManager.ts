@@ -24,6 +24,7 @@ import Global from "./Global";
 import ModelManager from "./ModelManager";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
+import { T } from "./i18n";
 import Card from "./ui/Card";
 import Deck from "./ui/Deck";
 import FullDeckModal from "./ui/FullDeckModal";
@@ -136,6 +137,48 @@ export default class UIManager extends cc.Component {
   @property(cc.Prefab)
   fullDeckModal: cc.Prefab;
 
+  @property(cc.Label)
+  blindTitleLabel: cc.Label;
+
+  @property(cc.Label)
+  atLeastScoreLabel: cc.Label;
+
+  @property(cc.Label)
+  roundScoreLabel: cc.Label;
+
+  @property(cc.Label)
+  runInfoButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  optionsButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  handsLabel: cc.Label;
+
+  @property(cc.Label)
+  discardsLabel: cc.Label;
+
+  @property(cc.Label)
+  anteLabel: cc.Label;
+
+  @property(cc.Label)
+  roundLabel: cc.Label;
+
+  @property(cc.Label)
+  playHandButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  discardButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  sortHandLabel: cc.Label;
+
+  @property(cc.Label)
+  rankButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  suitButtonLabel: cc.Label;
+
   // LIFE-CYCLE CALLBACKS:
 
   protected onLoad(): void {
@@ -146,6 +189,22 @@ export default class UIManager extends cc.Component {
     this.deckModalNode.active = false;
 
     this.cardsGroupPanelY = this.handCardsPanel.getPosition().y;
+
+    this.blindTitleLabel.string = T("choose_your_next_blind");
+    this.atLeastScoreLabel.string = T("score_at_least");
+    this.roundScoreLabel.string = T("round_score");
+    this.runInfoButtonLabel.string = T("run_info");
+    this.optionsButtonLabel.string = T("options");
+    this.handsLabel.string = T("hands");
+    this.discardsLabel.string = T("discards");
+    this.anteLabel.string = T("ante");
+    this.roundLabel.string = T("round");
+    this.playHandButtonLabel.string = T("play_hand");
+    this.discardButtonLabel.string = T("discard");
+    this.sortHandLabel.string = T("sort_hand");
+    this.rankButtonLabel.string = T("rank");
+    this.suitButtonLabel.string = T("suit");
+
     console.log("uimanager loaded");
   }
 
@@ -919,10 +978,12 @@ export default class UIManager extends cc.Component {
     this.cardTooltipBox.setPosition(
       new cc.Vec3(tooltipPos.x, tooltipPos.y + cardNodes[index].height, 0)
     );
-    this.cardName.string = `${card.symbol} of <color=${
-      suitColor[card.cardFlower]
-    }>${suitName[card.cardFlower]}</color>`;
-    this.cardValue.string = `<color=#6392f2>+${card.value}</color=#6392f2> chips`;
+    this.cardName.string = T("cards_info", {
+      num: card.symbol,
+      color: suitColor[card.cardFlower],
+      suit: suitName[card.cardFlower],
+    });
+    this.cardValue.string = T("chip", { chip: card.value });
     this.cardTooltipBox.active = status;
   }
 
