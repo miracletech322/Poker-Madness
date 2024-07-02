@@ -27,6 +27,7 @@ import { uiManager } from "./framework/uiManager";
 import Card from "./ui/Card";
 import Deck from "./ui/Deck";
 import FullDeckModal from "./ui/FullDeckModal";
+const i18n = require("LanguageData");
 
 const { ccclass, property } = cc._decorator;
 
@@ -136,6 +137,48 @@ export default class UIManager extends cc.Component {
   @property(cc.Prefab)
   fullDeckModal: cc.Prefab;
 
+  @property(cc.Label)
+  blindTitleLabel: cc.Label;
+
+  @property(cc.Label)
+  atLeastScoreLabel: cc.Label;
+
+  @property(cc.Label)
+  roundScoreLabel: cc.Label;
+
+  @property(cc.Label)
+  runInfoButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  optionsButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  handsLabel: cc.Label;
+
+  @property(cc.Label)
+  discardsLabel: cc.Label;
+
+  @property(cc.Label)
+  anteLabel: cc.Label;
+
+  @property(cc.Label)
+  roundLabel: cc.Label;
+
+  @property(cc.Label)
+  playHandButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  discardButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  sortHandLabel: cc.Label;
+
+  @property(cc.Label)
+  rankButtonLabel: cc.Label;
+
+  @property(cc.Label)
+  suitButtonLabel: cc.Label;
+
   // LIFE-CYCLE CALLBACKS:
 
   protected onLoad(): void {
@@ -146,12 +189,20 @@ export default class UIManager extends cc.Component {
     this.deckModalNode.active = false;
 
     this.cardsGroupPanelY = this.handCardsPanel.getPosition().y;
+
     console.log("uimanager loaded");
   }
 
   start() {
-    this.showBlindSelect();
     GameManager._instance.roundInit();
+    GameManager._instance.loadBlindData(
+      GameManager._instance.gameSetting.round + 1
+    );
+    GameManager._instance.loadBlindData(
+      GameManager._instance.gameSetting.round + 4
+    );
+    console.log(GameManager._instance.gameSetting.blinds);
+    this.showBlindSelect();
   }
 
   protected onEnable(): void {
@@ -192,8 +243,30 @@ export default class UIManager extends cc.Component {
     clientEvent.off("FullDeckHideEvent", this.hideFullDeckModal, this);
   }
 
+  public loadI18n() {
+    this.blindTitleLabel.string = i18n.t("basic.choose_your_next_blind");
+    this.atLeastScoreLabel.string = i18n.t("basic.score_at_least");
+    this.roundScoreLabel.string = i18n.t("basic.round_score");
+    this.runInfoButtonLabel.string = i18n.t("basic.run_info");
+    this.optionsButtonLabel.string = i18n.t("basic.options");
+    this.handsLabel.string = i18n.t("basic.hands");
+    this.discardsLabel.string = i18n.t("basic.discards");
+    this.anteLabel.string = i18n.t("basic.ante");
+    this.roundLabel.string = i18n.t("basic.round");
+    this.playHandButtonLabel.string = i18n.t("basic.play_hand");
+    this.discardButtonLabel.string = i18n.t("basic.discard");
+    this.sortHandLabel.string = i18n.t("basic.sort_hand");
+    this.rankButtonLabel.string = i18n.t("basic.rank");
+    this.suitButtonLabel.string = i18n.t("basic.suit");
+  }
+
+  public switchLang(lang: string) {
+    i18n.init(lang);
+    this.loadI18n();
+  }
+
+  // show blind round select panel
   public showBlindSelect() {
-    GameManager._instance.roundInit();
     this.cardsGroup.removeAllChildren();
 
     if (this.blindSelectPoint.children.length === 0) {
@@ -215,7 +288,7 @@ export default class UIManager extends cc.Component {
         .to(
           0.2 / gameSpeed,
           {
-            position: cc.v3(posX, 50, 0),
+            position: cc.v3(posX, 100, 0),
           },
           {
             easing: "quadInOut",
@@ -228,26 +301,26 @@ export default class UIManager extends cc.Component {
     });
   }
 
+  // hide and remove blind round select panel
   public hideBlindSelectModals() {
     this.blindSelectPoint.children.forEach((node, index) => {
-      console.log(index);
       const pos = node.getPosition();
       cc.tween(node)
         .delay((index * 0.1) / gameSpeed)
         .to(0.1 / gameSpeed, {
-          position: cc.v3(pos.x, 50, 0),
+          position: cc.v3(pos.x, 100, 0),
         })
         .to(0.2 / gameSpeed, {
           position: cc.v3(pos.x, -1000, 0),
+        })
+        .call(() => {
+          node.destroy();
         })
         .start();
     });
   }
 
-  public showStartOptionDialog() {
-    uiManager.instance.showDialog("StartOption", this.startOptionDialog);
-  }
-
+  // UI update for game setting change
   public changeGameValues(gameSetting: GameSetting) {
     gameSetting.score >= 0 &&
       (this.scoreValue.string = gameSetting.score.toString());
@@ -290,13 +363,19 @@ export default class UIManager extends cc.Component {
     }
   }
 
+  // fill hand cards with new cards
   public fillCards(newFilledCards: CardObject[]) {
-    let fillEndIndex = 0;
+    GameManager._instance.updateGameSetting({
+      gameProgress: GameProgress.FillingCard,
+    });
+
+    let animationIndex = 0;
     for (let i = 0; i < newFilledCards.length; i++) {
       const card = newFilledCards[i];
       const newCard = cc.instantiate(this.card);
       newCard.getComponent(Card).setCardInfo(card);
 
+      // new filled card animation
       const backCardWorldPos = this.backCard.convertToWorldSpaceAR(cc.v2(0, 0));
       const initialPos = this.cardsGroup.convertToNodeSpaceAR(backCardWorldPos);
       newCard.setPosition(initialPos);
@@ -311,15 +390,17 @@ export default class UIManager extends cc.Component {
             i + 1,
             GameManager._instance.gameSetting.sortType
           );
-          fillEndIndex++;
-          if (fillEndIndex === newFilledCards.length) {
+          animationIndex++;
+          if (animationIndex === newFilledCards.length) {
             GameManager._instance.updateGameSetting({
               gameProgress: GameProgress.Init,
             });
           }
         })
         .call(() => {
-          clientEvent.dispatchEvent("fillCardEvent", card.id);
+          GameManager._instance.updateGameSetting({
+            remainCardCount: GameManager._instance.gameSetting.newCards.length,
+          });
         })
         .start();
     }
@@ -479,6 +560,7 @@ export default class UIManager extends cc.Component {
     this.arrangeHandCards(0, 0, GameManager._instance.gameSetting.sortType);
   }
 
+  // sort hand cards(totalCount: new cards count, cardIndex: new card index)
   public arrangeHandCards(
     totalCount: number,
     cardIndex: number,
@@ -621,8 +703,6 @@ export default class UIManager extends cc.Component {
       scoreRule[scoreType][
         GameManager._instance.gameSetting.scoreLevel[scoreType]
       ].multi2;
-    this.multiValue1.string = multi1.toString();
-    this.multiValue2.string = multi2.toString();
     GameManager._instance.updateGameSetting({
       multi1,
       multi2,
@@ -912,10 +992,12 @@ export default class UIManager extends cc.Component {
     this.cardTooltipBox.setPosition(
       new cc.Vec3(tooltipPos.x, tooltipPos.y + cardNodes[index].height, 0)
     );
-    this.cardName.string = `${card.symbol} of <color=${
-      suitColor[card.cardFlower]
-    }>${suitName[card.cardFlower]}</color>`;
-    this.cardValue.string = `<color=#6392f2>+${card.value}</color=#6392f2> chips`;
+    this.cardName.string = i18n.t("basic.cards_info", {
+      num: card.symbol,
+      color: suitColor[card.cardFlower],
+      suit: suitName[card.cardFlower],
+    });
+    this.cardValue.string = i18n.t("basic.chip", { chip: card.value });
     this.cardTooltipBox.active = status;
   }
 

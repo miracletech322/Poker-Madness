@@ -119,7 +119,7 @@ export default class Card extends cc.Component {
       this.node.setPosition(
         cc.v2(this.initialPos.x, this.initialPos.y - cardPopDistance)
       );
-      clientEvent.dispatchEvent("pickCard", [CardStatus.Initial, this.cardId]);
+      clientEvent.dispatchEvent("cardStatusEvent", [CardStatus.Initial, this.cardId]);
     } else if (
       countPicked < 5 &&
       (status === CardStatus.Initial || status === undefined)
@@ -127,7 +127,7 @@ export default class Card extends cc.Component {
       this.node.setPosition(
         cc.v2(this.initialPos.x, this.initialPos.y + cardPopDistance)
       );
-      clientEvent.dispatchEvent("pickCard", [CardStatus.Pick, this.cardId]);
+      clientEvent.dispatchEvent("cardStatusEvent", [CardStatus.Pick, this.cardId]);
     } else return;
   }
 

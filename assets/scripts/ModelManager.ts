@@ -8,8 +8,10 @@
 import {
   CardObject,
   CardFlower,
-  maxCardForOneRow,
   CardStatus,
+  BlindType,
+  Blind,
+  blinds,
 } from "./Constant";
 import GameManager from "./GameManager";
 
@@ -499,5 +501,9 @@ export default class ModelManager extends cc.Component {
       (card) => card.cardStatus === cardStatus
     ).length;
     return count;
+  }
+
+  public getBlindsListByType(type: BlindType): Blind[] {
+    return blinds.filter((blind) => blind.type === type);
   }
 }

@@ -6,6 +6,8 @@
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
 import {
+  Blind,
+  BlindType,
   CardObject,
   CardStatus,
   Direction,
@@ -14,7 +16,7 @@ import {
   RoundFinishTypes,
   ScoreTypes,
   SortTypes,
-  maxCardForOneRow,
+  blinds,
   roundScore,
 } from "./Constant";
 import Global from "./Global";
@@ -42,16 +44,14 @@ export default class GameManager extends cc.Component {
   // update (dt) {}
 
   protected onEnable(): void {
-    clientEvent.on("pickCard", this.pickCardEvent, this);
-    clientEvent.on("roundStarted", this.roundStartedEvent, this);
-    clientEvent.on("fillCardEvent", this.fillCardEvent, this);
+    clientEvent.on("cardStatusEvent", this.cardStatusEvent, this);
+    clientEvent.on("roundStartedEvent", this.roundStartedEvent, this);
     clientEvent.on("cardHoverEvent", this.showCardTooltip, this);
   }
 
   protected onDisable(): void {
-    clientEvent.off("pickCard", this.pickCardEvent, this);
-    clientEvent.off("roundStarted", this.roundStartedEvent, this);
-    clientEvent.off("fillCardEvent", this.fillCardEvent, this);
+    clientEvent.off("cardStatusEvent", this.cardStatusEvent, this);
+    clientEvent.off("roundStartedEvent", this.roundStartedEvent, this);
     clientEvent.off("cardHoverEvent", this.showCardTooltip, this);
   }
 
@@ -59,6 +59,7 @@ export default class GameManager extends cc.Component {
     this.gameSetting = {
       gameStart: false,
       round: 0,
+      maxCountForHandCards: 8,
       gameProgress: GameProgress.Init,
       totalCardCount: 52,
       remainCardCount: 52,
@@ -72,13 +73,12 @@ export default class GameManager extends cc.Component {
       cash: 5,
       ante: 1,
       totalAnte: 8,
-      remainHandCardsCount: 0,
       newCards: [],
       handCards: [],
       scoreLevel: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       sortType: SortTypes.Rank,
+      blinds: [],
     };
-    this.updateGameSetting({});
   }
 
   public updateGameSetting(newValue: GameSetting) {
@@ -90,37 +90,77 @@ export default class GameManager extends cc.Component {
     this.updateGameSetting({
       gameStart: true,
       round: this.gameSetting.round + 1,
+      gameProgress: GameProgress.Init,
       totalCardCount: 52,
       remainCardCount: 52,
       score: 0,
       reachingScore: roundScore[this.gameSetting.round],
       multi1: 0,
       multi2: 0,
+      scoreType: null,
       hands: 4,
       discards: 4,
-      cash: this.gameSetting.cash ?? 0,
-      ante: this.gameSetting.ante,
-      totalAnte: this.gameSetting.totalAnte,
-      remainHandCardsCount: 0,
       newCards: [],
       handCards: [],
-      scoreLevel: [...this.gameSetting.scoreLevel],
-      sortType: this.gameSetting.sortType,
     });
     ModelManager._instance.randomSortCards();
     UIManager.instance.hideBlindSelectModals();
     this.fillCards();
   }
 
+  public loadBlindData(round: number) {
+    const gameBlinds = this.gameSetting.blinds;
+    if (gameBlinds.length < round) {
+      const ante = Math.floor((round - 1) / 3) + 1;
+      const newBlinds: Blind[] = [];
+      newBlinds.push(blinds[0], blinds[1]);
+      let bossBlindIndex: number;
+      if (ante === 8) {
+        const finisherBlinds = ModelManager._instance.getBlindsListByType(
+          BlindType.FinisherBossBlind
+        );
+      } else {
+        const bossBlinds = ModelManager._instance.getBlindsListByType(
+          BlindType.BossBlind
+        );
+        const totBossBlindCount = bossBlinds.length;
+        const gameBossBlinds = [...gameBlinds].filter(
+          (blind) => blind.type === BlindType.BossBlind
+        );
+        const gameBossBlindsCount = gameBossBlinds.length;
+        const latestGameBossBlinds = [...gameBossBlinds].slice(
+          0,
+          Math.floor(gameBossBlindsCount / totBossBlindCount) *
+            totBossBlindCount
+        );
+        while (true) {
+          bossBlindIndex = ModelManager._instance.getRandomNumber(
+            0,
+            totBossBlindCount - 1
+          );
+          if (bossBlinds[bossBlindIndex].minimumAnte > ante) continue;
+          const dupli = latestGameBossBlinds.findIndex(
+            (blind) => blind.id === bossBlinds[bossBlindIndex].id
+          );
+
+          if (dupli === -1) break;
+        }
+        newBlinds.push(bossBlinds[bossBlindIndex]);
+      }
+      this.updateGameSetting({
+        blinds: [...gameBlinds, ...newBlinds],
+      });
+    }
+  }
+
   public fillCards() {
     const newCards = this.gameSetting.newCards;
     const handCards = this.gameSetting.handCards;
     const newFilledCards: CardObject[] = [];
-    const handCardsCount =
-      GameManager._instance.gameSetting.remainHandCardsCount;
     while (true) {
       if (
-        handCards.length + newFilledCards.length === maxCardForOneRow ||
+        handCards.length + newFilledCards.length ===
+          this.gameSetting.maxCountForHandCards ||
         newCards.length === 0
       )
         break;
@@ -128,10 +168,10 @@ export default class GameManager extends cc.Component {
       newFilledCards.push(newCard);
     }
     UIManager.instance.fillCards(newFilledCards);
-    this.updateGameSetting({ gameProgress: GameProgress.FillingCard });
   }
 
   public addCardGroup(card: CardObject) {
+    card.cardStatus = CardStatus.Initial;
     this.gameSetting.handCards.push(card);
   }
 
@@ -145,12 +185,10 @@ export default class GameManager extends cc.Component {
       handCards.sort((card1, card2) => card1.flowerId - card2.flowerId);
       handCards.sort((card1, card2) => card1.cardFlower - card2.cardFlower);
     }
-    console.log({ handCards });
-
     this.gameSetting.handCards = [...handCards];
   }
 
-  public pickCardEvent([pickStatus, cardId]: [CardStatus, number]) {
+  public cardStatusEvent([pickStatus, cardId]: [CardStatus, number]) {
     const cardIndex = this.gameSetting.handCards.findIndex(
       (card) => card.id === cardId
     );
@@ -159,12 +197,6 @@ export default class GameManager extends cc.Component {
     }
 
     UIManager.instance.displayMultiInfo();
-  }
-
-  public fillCardEvent(cardId: number) {
-    this.updateGameSetting({
-      remainCardCount: this.gameSetting.remainCardCount - 1,
-    });
   }
 
   public discardHandCards(cardId: number) {
