@@ -2,7 +2,7 @@ import { GameStartOption } from "../Constant";
 import Global from "../Global";
 import { clientEvent } from "../framework/clientEvent";
 import { uiManager } from "../framework/uiManager";
-import { T } from "../i18n";
+const i18n = require("LanguageData");
 
 const { ccclass, property } = cc._decorator;
 
@@ -42,10 +42,10 @@ export default class StartOptionDialog extends cc.Component {
   buttonNormalSpriteFrame: cc.SpriteFrame;
 
   protected onLoad(): void {
-    this.newGameButtonLabel.string = T("new_game");
-    this.continueButtonLabel.string = T("continue");
-    this.challengeButtonLabel.string = T("challenges");
-    this.playButtonLabel.string = T("play");
+    this.newGameButtonLabel.string = i18n.t("basic.new_game");
+    this.continueButtonLabel.string = i18n.t("basic.continue");
+    this.challengeButtonLabel.string = i18n.t("basic.challenges");
+    this.playButtonLabel.string = i18n.t("basic.play");
   }
 
   start() {

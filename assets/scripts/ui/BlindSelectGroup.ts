@@ -1,12 +1,11 @@
 import GameManager from "../GameManager";
 import { clientEvent } from "../framework/clientEvent";
-import { T } from "../i18n";
+const i18n = require("LanguageData");
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class BlindSelectGroup extends cc.Component {
-
   @property(cc.Label)
   scoreAtLeastLabel: cc.Label;
 
@@ -17,9 +16,9 @@ export default class BlindSelectGroup extends cc.Component {
   orLabel: cc.Label;
 
   protected onLoad(): void {
-    this.scoreAtLeastLabel.string = T("score_at_least");
-    this.rewardLabel.string = T("reward");
-    this.orLabel.string = T("or");
+    this.scoreAtLeastLabel.string = i18n.t("basic.score_at_least");
+    this.rewardLabel.string = i18n.t("basic.reward");
+    this.orLabel.string = i18n.t("basic.or");
   }
 
   start() {}
@@ -38,5 +37,7 @@ export default class BlindSelectGroup extends cc.Component {
 
   public selectRound() {
     clientEvent.dispatchEvent("roundStartedEvent", []);
+    i18n.init("zh");
+    i18n.updateSceneRenderers()
   }
 }

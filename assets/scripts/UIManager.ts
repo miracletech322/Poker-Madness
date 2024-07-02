@@ -24,10 +24,10 @@ import Global from "./Global";
 import ModelManager from "./ModelManager";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
-import { T } from "./i18n";
 import Card from "./ui/Card";
 import Deck from "./ui/Deck";
 import FullDeckModal from "./ui/FullDeckModal";
+const i18n = require("LanguageData");
 
 const { ccclass, property } = cc._decorator;
 
@@ -190,20 +190,20 @@ export default class UIManager extends cc.Component {
 
     this.cardsGroupPanelY = this.handCardsPanel.getPosition().y;
 
-    this.blindTitleLabel.string = T("choose_your_next_blind");
-    this.atLeastScoreLabel.string = T("score_at_least");
-    this.roundScoreLabel.string = T("round_score");
-    this.runInfoButtonLabel.string = T("run_info");
-    this.optionsButtonLabel.string = T("options");
-    this.handsLabel.string = T("hands");
-    this.discardsLabel.string = T("discards");
-    this.anteLabel.string = T("ante");
-    this.roundLabel.string = T("round");
-    this.playHandButtonLabel.string = T("play_hand");
-    this.discardButtonLabel.string = T("discard");
-    this.sortHandLabel.string = T("sort_hand");
-    this.rankButtonLabel.string = T("rank");
-    this.suitButtonLabel.string = T("suit");
+    this.blindTitleLabel.string = i18n.t("basic.choose_your_next_blind");
+    this.atLeastScoreLabel.string = i18n.t("basic.score_at_least");
+    this.roundScoreLabel.string = i18n.t("basic.round_score");
+    this.runInfoButtonLabel.string = i18n.t("basic.run_info");
+    this.optionsButtonLabel.string = i18n.t("basic.options");
+    this.handsLabel.string = i18n.t("basic.hands");
+    this.discardsLabel.string = i18n.t("basic.discards");
+    this.anteLabel.string = i18n.t("basic.ante");
+    this.roundLabel.string = i18n.t("basic.round");
+    this.playHandButtonLabel.string = i18n.t("basic.play_hand");
+    this.discardButtonLabel.string = i18n.t("basic.discard");
+    this.sortHandLabel.string = i18n.t("basic.sort_hand");
+    this.rankButtonLabel.string = i18n.t("basic.rank");
+    this.suitButtonLabel.string = i18n.t("basic.suit");
 
     console.log("uimanager loaded");
   }
@@ -978,12 +978,12 @@ export default class UIManager extends cc.Component {
     this.cardTooltipBox.setPosition(
       new cc.Vec3(tooltipPos.x, tooltipPos.y + cardNodes[index].height, 0)
     );
-    this.cardName.string = T("cards_info", {
+    this.cardName.string = i18n.t("basic.cards_info", {
       num: card.symbol,
       color: suitColor[card.cardFlower],
       suit: suitName[card.cardFlower],
     });
-    this.cardValue.string = T("chip", { chip: card.value });
+    this.cardValue.string = i18n.t("basic.chip", { chip: card.value });
     this.cardTooltipBox.active = status;
   }
 

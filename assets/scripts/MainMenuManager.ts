@@ -10,7 +10,7 @@ import { GameStartOption } from "./Constant";
 import Global from "./Global";
 import { clientEvent } from "./framework/clientEvent";
 import { uiManager } from "./framework/uiManager";
-import { T, loadI18n, setLanguage } from "./i18n";
+const i18n = require("LanguageData");
 
 const { ccclass, property } = cc._decorator;
 
@@ -48,10 +48,9 @@ export default class MainMenuManager extends cc.Component {
         console.log({ err });
       });
 
-    loadI18n();
-
-    this.playButtonLabel.string = T("play");
-    this.collectionButtonLabel.string = T("collection");
+    i18n.init("en");
+    this.playButtonLabel.string = i18n.t("basic.play");
+    this.collectionButtonLabel.string = i18n.t("basic.collection");
   }
 
   start() {}
