@@ -190,21 +190,6 @@ export default class UIManager extends cc.Component {
 
     this.cardsGroupPanelY = this.handCardsPanel.getPosition().y;
 
-    this.blindTitleLabel.string = i18n.t("basic.choose_your_next_blind");
-    this.atLeastScoreLabel.string = i18n.t("basic.score_at_least");
-    this.roundScoreLabel.string = i18n.t("basic.round_score");
-    this.runInfoButtonLabel.string = i18n.t("basic.run_info");
-    this.optionsButtonLabel.string = i18n.t("basic.options");
-    this.handsLabel.string = i18n.t("basic.hands");
-    this.discardsLabel.string = i18n.t("basic.discards");
-    this.anteLabel.string = i18n.t("basic.ante");
-    this.roundLabel.string = i18n.t("basic.round");
-    this.playHandButtonLabel.string = i18n.t("basic.play_hand");
-    this.discardButtonLabel.string = i18n.t("basic.discard");
-    this.sortHandLabel.string = i18n.t("basic.sort_hand");
-    this.rankButtonLabel.string = i18n.t("basic.rank");
-    this.suitButtonLabel.string = i18n.t("basic.suit");
-
     console.log("uimanager loaded");
   }
 
@@ -256,6 +241,28 @@ export default class UIManager extends cc.Component {
       this
     );
     clientEvent.off("FullDeckHideEvent", this.hideFullDeckModal, this);
+  }
+
+  public loadI18n() {
+    this.blindTitleLabel.string = i18n.t("basic.choose_your_next_blind");
+    this.atLeastScoreLabel.string = i18n.t("basic.score_at_least");
+    this.roundScoreLabel.string = i18n.t("basic.round_score");
+    this.runInfoButtonLabel.string = i18n.t("basic.run_info");
+    this.optionsButtonLabel.string = i18n.t("basic.options");
+    this.handsLabel.string = i18n.t("basic.hands");
+    this.discardsLabel.string = i18n.t("basic.discards");
+    this.anteLabel.string = i18n.t("basic.ante");
+    this.roundLabel.string = i18n.t("basic.round");
+    this.playHandButtonLabel.string = i18n.t("basic.play_hand");
+    this.discardButtonLabel.string = i18n.t("basic.discard");
+    this.sortHandLabel.string = i18n.t("basic.sort_hand");
+    this.rankButtonLabel.string = i18n.t("basic.rank");
+    this.suitButtonLabel.string = i18n.t("basic.suit");
+  }
+
+  public switchLang(lang: string) {
+    i18n.init(lang);
+    this.loadI18n();
   }
 
   // show blind round select panel

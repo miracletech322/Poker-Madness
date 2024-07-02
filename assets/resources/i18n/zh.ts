@@ -18,7 +18,7 @@ window.i18n.languages.zh = {
     reward: "Reward",
     or: "Or",
     skip_blind: "Skip Blind",
-    round_score: "Round\nscore",
+    round_score: "Round\nscore1",
     choose_your_next_blind: "Choose your next Blind1",
     play_hand: "Play Hand",
     discard: "Discard",
@@ -55,7 +55,7 @@ window.i18n.languages.zh = {
     hearts: "Hearts",
     cubes: "Cubes",
     diamonds: "Diamonds",
-    chip: "<color=#0088ff>+{{chip}}</color> chips",
-    cards_info: "{{num}} of <color={{color}}>{{suit}}</color>",
+    chip: "<color=#0088ff>+%{chip}</color> chips1",
+    cards_info: "%{num} of <color={{color}}>%{suit}</color>1",
   },
 };
