@@ -6,6 +6,8 @@
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
 import {
+  Blind,
+  BlindType,
   CardObject,
   CardStatus,
   Direction,
@@ -14,6 +16,7 @@ import {
   RoundFinishTypes,
   ScoreTypes,
   SortTypes,
+  blinds,
   roundScore,
 } from "./Constant";
 import Global from "./Global";
@@ -74,6 +77,7 @@ export default class GameManager extends cc.Component {
       handCards: [],
       scoreLevel: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       sortType: SortTypes.Rank,
+      blinds: [],
     };
   }
 
@@ -96,16 +100,57 @@ export default class GameManager extends cc.Component {
       scoreType: null,
       hands: 4,
       discards: 4,
-      ante: this.gameSetting.ante,
-      totalAnte: this.gameSetting.totalAnte,
       newCards: [],
       handCards: [],
-      scoreLevel: [...this.gameSetting.scoreLevel],
-      sortType: this.gameSetting.sortType,
     });
     ModelManager._instance.randomSortCards();
     UIManager.instance.hideBlindSelectModals();
     this.fillCards();
+  }
+
+  public loadBlindData(round: number) {
+    const gameBlinds = this.gameSetting.blinds;
+    if (gameBlinds.length < round) {
+      const ante = Math.floor((round - 1) / 3) + 1;
+      const newBlinds: Blind[] = [];
+      newBlinds.push(blinds[0], blinds[1]);
+      let bossBlindIndex: number;
+      if (ante === 8) {
+        const finisherBlinds = ModelManager._instance.getBlindsListByType(
+          BlindType.FinisherBossBlind
+        );
+      } else {
+        const bossBlinds = ModelManager._instance.getBlindsListByType(
+          BlindType.BossBlind
+        );
+        const totBossBlindCount = bossBlinds.length;
+        const gameBossBlinds = [...gameBlinds].filter(
+          (blind) => blind.type === BlindType.BossBlind
+        );
+        const gameBossBlindsCount = gameBossBlinds.length;
+        const latestGameBossBlinds = [...gameBossBlinds].slice(
+          0,
+          Math.floor(gameBossBlindsCount / totBossBlindCount) *
+            totBossBlindCount
+        );
+        while (true) {
+          bossBlindIndex = ModelManager._instance.getRandomNumber(
+            0,
+            totBossBlindCount - 1
+          );
+          if (bossBlinds[bossBlindIndex].minimumAnte > ante) continue;
+          const dupli = latestGameBossBlinds.findIndex(
+            (blind) => blind.id === bossBlinds[bossBlindIndex].id
+          );
+
+          if (dupli === -1) break;
+        }
+        newBlinds.push(bossBlinds[bossBlindIndex]);
+      }
+      this.updateGameSetting({
+        blinds: [...gameBlinds, ...newBlinds],
+      });
+    }
   }
 
   public fillCards() {

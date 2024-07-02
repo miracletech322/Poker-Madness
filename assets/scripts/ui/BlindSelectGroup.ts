@@ -37,7 +37,5 @@ export default class BlindSelectGroup extends cc.Component {
 
   public selectRound() {
     clientEvent.dispatchEvent("roundStartedEvent", []);
-    i18n.init("zh");
-    i18n.updateSceneRenderers()
   }
 }

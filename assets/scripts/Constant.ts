@@ -27,6 +27,7 @@ export interface GameSetting {
   handCards?: CardObject[];
   scoreLevel?: number[];
   sortType?: number;
+  blinds?: Blind[];
 }
 
 export interface CardObject {

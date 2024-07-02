@@ -209,8 +209,15 @@ export default class UIManager extends cc.Component {
   }
 
   start() {
-    this.showBlindSelect();
     GameManager._instance.roundInit();
+    GameManager._instance.loadBlindData(
+      GameManager._instance.gameSetting.round + 1
+    );
+    GameManager._instance.loadBlindData(
+      GameManager._instance.gameSetting.round + 4
+    );
+    console.log(GameManager._instance.gameSetting.blinds);
+    this.showBlindSelect();
   }
 
   protected onEnable(): void {
